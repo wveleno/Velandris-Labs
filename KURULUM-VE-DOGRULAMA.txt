@@ -1,0 +1,19 @@
+VELANDRIS LABS — İSTATİSTİK PANELİ ENTEGRASYONU
+
+Bu paket AI Hub olmadan hazırlanmıştır. Ana sayfadaki “0 TL / Başlangıç maliyeti” kartı kaldırılmıştır. Ana sayfa tasarımı korunmuştur.
+
+ÖNEMLİ: Bu panel şu sürümde yalnızca toplu istatistik gösterir ve /panel.html adresi herkese açıktır. Kullanıcı adı/şifre veya özel admin girişi yoktur. Gizli bilgi göstermez; yalnızca toplam görüntüleme ve araç açılma sayıları hedeflenmiştir. Paneli özel tutmak istersen yayına almadan önce ayrıca erişim koruması eklenmelidir.
+
+VERİTABANI
+- Ölçüm API'si Netlify Database + Drizzle kullanır. Paket dosyaları hazırdır, ancak Netlify hesabında veritabanının etkinleştirilmesi/bağlanması ve migration'ın uygulanması gerekir. Bu hesap adımı buradan otomatik yapılamaz.
+- Veritabanı bağlanmadan /api/metrics çağrıları 503 döndürebilir; panelde veri görünmemesi bu durumda beklenir.
+- Ölçümler yayına alındıktan sonra başlar; geçmiş trafik geriye dönük gelmez. Yenilemeler de sayılır; tekil ziyaretçi sayacı değildir.
+- DNT / Global Privacy Control etkinse istemci ölçüm göndermez.
+
+GITHUB / NETLIFY
+1. ZIP'i ayrı bir klasöre çıkar. Dosyaları GitHub deposunun kök dizinine yükle; aynı isimli dosyaları güncelle.
+2. Netlify deploy tamamlanınca ana sayfayı ve araçları kontrol et.
+3. Netlify'da Database özelliğini etkinleştir/bağla ve migration'ı uygula.
+4. /panel.html adresini aç. Hata çıkarsa panelden önce veritabanı kurulumunu kontrol et.
+
+API anahtarı veya .env dosyası bu pakette yoktur.
