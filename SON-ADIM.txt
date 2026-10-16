@@ -1,0 +1,11 @@
+VELANDRIS LABS — HAZIR DOSYALAR
+
+Bu sürümde AI Hub arayüzü kaldırıldı; mevcut araçlar ve Hizmetler bölümü korundu. Kullanıcı girişi/kayıt sistemi eklenmedi.
+
+YAYINA ALMA
+Bu çalışma alanının GitHub/Netlify hesabına doğrudan erişimi olmadığı için canlı siteyi benim adıma yayımlamak mümkün değil. index.html, style.css, app.js ve netlify.toml dosyalarını mevcut GitHub deposunun köküne yükleyip aynı dosyaların üzerine yazınca Netlify otomatik dağıtım yapar. Eski netlify/functions/tech-assistant.js dosyasını da GitHub deposundan sil; yoksa AI backend fonksiyonu depoda kalır (arayüzde görünmez).
+
+ZİYARETÇİ İSTATİSTİĞİ
+Gerçek Cloudflare Web Analytics kodu, Cloudflare hesabında site oluşturulunca verilen özel beacon token içerir. Hesabına erişmeden token üretilemez; bu yüzden sahte/çalışmayan izleme kodu eklemedim. index.html içinde kodun ekleneceği yer işaretlendi. Token kodu hazır olduğunda dosyaya eklenebilir.
+
+API anahtarı veya .env dosyası bu pakette bulunmaz.
