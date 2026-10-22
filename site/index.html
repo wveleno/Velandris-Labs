@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07101b">
+  <meta name="description" content="Velandris Labs; görsel, metin, veri ve günlük işler için pratik web araçları.">
+  <meta property="og:title" content="Velandris Labs — Pratik dijital araçlar">
+  <meta property="og:description" content="Dosya düzenleme, görsel hazırlama, veri dönüştürme ve günlük işler için pratik araçlar.">
+  <meta property="og:type" content="website">
+  <title>Velandris Labs — Pratik dijital araçlar</title>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div><div class="ambient ambient-b" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Velandris Labs ana sayfa">
+      <img src="assets/mark.svg" class="brand-logo" width="44" height="44" alt="Velandris Labs logosu">
+      <span class="brand-wordmark"><strong>VELANDRIS<span>LABS</span></strong><small>PRATİK DİJİTAL ARAÇLAR</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
+    <nav id="nav" aria-label="Ana menü"><a href="#studio">Uygulamalar</a><a href="#usecases">Neler yapabilirsin?</a><a href="#projects">Projeler</a><a href="#about">Hakkında</a></nav>
+    <a class="nav-cta" href="#contact">İletişim <span>↗</span></a>
+  </header>
+  <main id="home">
+    <section class="hero hero-v3 wrap">
+      <div class="hero-copy hero-copy-v3">
+        <div class="eyebrow"><span class="pulse"></span> VELANDRIS LABS <span class="eyebrow-divider">/</span> PRATİK ARAÇLAR</div>
+        <h1>Dijital işlerini<br><span>daha akıllı</span> tamamla.</h1>
+        <p>Fotoğraf düzenle, metnini toparla, verini dönüştür veya küçük bir hesabı hemen yap. İhtiyacın olan aracı aç ve işini bitir.</p>
+        <div class="hero-actions"><a class="button primary" href="#studio">Uygulamaları keşfet <span>↓</span></a><button class="button secondary" data-open-app="imageflow">Görsel hazırla <span>↗</span></button></div>
+        <div class="hero-proof"><span class="proof-icon">✦</span><span><strong>Kurulum yok, karmaşa yok.</strong><small>Birçok işlem doğrudan tarayıcında yapılır.</small></span></div>
+      </div>
+      <div class="command-center" aria-label="Velandris uygulama paneli ön izlemesi">
+        <div class="command-top"><div class="command-brand"><img src="assets/mark.svg" alt="" width="28" height="28"><span><strong>VELANDRIS</strong><small>ARAÇ MERKEZİ</small></span></div><div class="local-pill"><i></i> TARAYICINDA ÇALIŞIR</div></div>
+        <div class="command-greeting"><div><span class="command-kicker">ÇALIŞMA ALANI</span><h2>Bugün neyi<br><span>kolaylaştıralım?</span></h2></div><div class="command-orbit" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><img src="assets/mark.svg" alt="" width="61" height="61"></div></div>
+        <div class="quick-list">
+          <button class="quick-row" data-open-app="imageflow"><span class="quick-symbol quick-blue">▧</span><span class="quick-text"><strong>Görsel Atölyesi</strong><small>Boyutlandır · sıkıştır · dönüştür</small></span><span class="quick-arrow">↗</span></button>
+          <button class="quick-row" data-open-app="typingtest"><span class="quick-symbol quick-violet">⌨</span><span class="quick-text"><strong>Klavye Hız Testi</strong><small>30 saniyede kelime hızını ölç</small></span><span class="quick-arrow">↗</span></button>
+          <button class="quick-row" data-open-app="password"><span class="quick-symbol quick-green">⌁</span><span class="quick-text"><strong>Güçlü Şifre Üretici</strong><small>Uzunluğu ve karakterleri sen seç</small></span><span class="quick-arrow">↗</span></button>
+        </div>
+        <div class="command-foot"><span><i></i> Dosyaların cihazında kalır</span><span>PRATİK ARAÇLAR</span></div>
+      </div>
+    </section>
+    <div class="ticker ticker-v3" aria-label="Kullanım alanları"><span>GÖRSEL HAZIRLAMA</span><i></i><span>KLAVYE HIZ TESTİ</span><i></i><span>ŞİFRE GÜVENLİĞİ</span><i></i><span>TOPLU İŞLEM</span><i></i><span>TARAYICINDA ÇALIŞIR</span></div>
+
+    <section class="section wrap" id="studio">
+      <div class="section-head"><div><div class="eyebrow">UYGULAMALAR <span class="eyebrow-divider">/</span> 03 UYGULAMA</div><h2>İşine yarayanı <span>hemen aç.</span></h2><p>Sadece işe yarayan üç araç: görsellerini hazırla, yazma hızını ölç veya güçlü bir şifre oluştur.</p></div><label class="search"><span>⌕</span><input id="appSearch" type="search" placeholder="Örn. fotoğraf küçült, şifre, CSV…" aria-label="Uygulamalarda ara"></label></div>
+      <div class="app-grid app-grid-v3" id="appGrid">
+        <button class="app-card app-card-v3" data-app="imageflow" data-tags="görsel fotoğraf resim webp jpeg png sıkıştır küçült boyut toplu optimize"><div class="app-card-top"><span class="app-icon blue">▧</span><span class="app-category">GÖRSEL & DOSYA</span><span class="open-arrow">↗</span></div><h3>Görsel Atölyesi</h3><p>Birden fazla görseli küçült, WebP/JPEG/PNG biçimine dönüştür ve sonucu indirmeden önce karşılaştır.</p><div class="app-bottom"><span class="chip">Toplu işlem</span><span class="app-launch">Atölyeyi aç <b>→</b></span></div></button>
+        <button class="app-card app-card-v3" data-app="typingtest" data-tags="klavye hız testi yazma hızı kelime dakika wpm doğruluk performans"><div class="app-card-top"><span class="app-icon violet">⌨</span><span class="app-category">HIZ & PERFORMANS</span><span class="open-arrow">↗</span></div><h3>Klavye Hız Testi</h3><p>30 saniyede kaç doğru kelime yazabildiğini gör. Büyük/küçük harf ve noktalama puanı etkilemez.</p><div class="app-bottom"><span class="chip">30 saniye</span><span class="app-launch">Testi başlat <b>→</b></span></div></button>
+        <button class="app-card app-card-v3" data-app="password" data-tags="şifre parola güvenlik güçlü password rastgele üretici hesap gizlilik"><div class="app-card-top"><span class="app-icon green">⌁</span><span class="app-category">GÜVENLİK</span><span class="open-arrow">↗</span></div><h3>Güçlü Şifre Üretici</h3><p>Şifre uzunluğunu ve kullanacağın karakterleri seç. Şifre cihazında, rastgele olarak oluşturulur.</p><div class="app-bottom"><span class="chip">Yerel üretim</span><span class="app-launch">Şifre üret <b>→</b></span></div></button>
+      </div>
+      <p class="empty-state" id="emptyApps" hidden>Bu aramayla eşleşen uygulama bulunamadı.</p>
+    </section>
+
+    <section class="section usecase-section" id="usecases"><div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">ÜÇ NET ARAÇ</div><h2>İhtiyacını seç, <span>hemen kullan.</span></h2><p>Gereksiz kalabalık yok. Her bölüm belirli bir işi tamamlamak için hazırlandı.</p></div><span class="section-count">3 UYGULAMA</span></div>
+      <div class="usecase-grid">
+        <article class="usecase-card"><div class="usecase-top"><span class="usecase-icon usecase-blue">▧</span><span class="usecase-label">GÖRSEL & DOSYA</span></div><h3>Görsellerini hazırla.</h3><p>Birden fazla fotoğrafı tek seferde boyutlandır, sıkıştır veya web için uygun formata dönüştür.</p><div class="usecase-links"><button data-open-app="imageflow">Görsel Atölyesi'ni aç ↗</button></div></article>
+        <article class="usecase-card"><div class="usecase-top"><span class="usecase-icon usecase-violet">⌨</span><span class="usecase-label">HIZ & PERFORMANS</span></div><h3>Yazma hızını ölç.</h3><p>30 saniyelik testte dakikada kaç doğru kelime yazdığını ve doğruluğunu gör.</p><div class="usecase-links"><button data-open-app="typingtest">Klavye testini başlat ↗</button></div></article>
+        <article class="usecase-card"><div class="usecase-top"><span class="usecase-icon usecase-cyan">⌁</span><span class="usecase-label">GÜVENLİK</span></div><h3>Güçlü bir şifre oluştur.</h3><p>Uzunluğu ve karakter türlerini seç. Şifre doğrudan tarayıcında üretilir.</p><div class="usecase-links"><button data-open-app="password">Şifre oluşturucuyu aç ↗</button></div></article>
+      </div>
+      <p class="workflow-note"><span>ⓘ</span> Görsel işleme, klavye testi ve şifre üretimi bu sayfada çalışır. Kullanıcı hesabı veya sunucuda veri saklama gerektirmez.</p>
+    </div></section>
+
+    <section class="section wrap" id="projects">
+      <div class="section-head"><div><div class="eyebrow">PROJE VİTRİNİ</div><h2>Deneyerek <span>geliştiriyoruz.</span></h2><p>Velandris çatısı altında geliştirilen projeler ve araçlar.</p></div><span class="section-count">PROJELER / 02</span></div>
+      <div class="project-grid">
+        <article class="project-card featured"><div class="project-art"><div class="orbital orbital-1"></div><div class="orbital orbital-2"></div><img src="assets/mark.svg" alt="" width="92" height="92"><span>VL / 001</span></div><div class="project-body"><div class="project-status"><span class="status-dot"></span> GELİŞTİRİLİYOR</div><h3>Velandris JARVIS</h3><p>Masaüstünde çalışan yardımcı uygulama. Sesle kontrol ve bilgisayardaki işleri kolaylaştırma özellikleri üzerinde çalışılıyor.</p><div class="tags"><span>Python</span><span>Masaüstü</span><span>Asistan</span></div><a href="https://github.com/wveleno/Velandris-Labs" class="text-link" target="_blank" rel="noopener noreferrer">Depoyu incele ↗</a></div></article>
+        <article class="project-card"><div class="project-art art-tools"><div class="mini-terminal"><span>VELANDRIS / ARAÇLAR</span><code><b>Görsel · Klavye · Şifre</b><br>Hepsi bir arada</code><small>GÜNLÜK DİJİTAL ARAÇLAR</small></div><span>VL / 002</span></div><div class="project-body"><div class="project-status live"><span class="status-dot"></span> BU SÜRÜMDE</div><h3>Velandris Toolbench</h3><p>Görsel hazırlama, klavye hız testi ve güçlü şifre üretimi için üç pratik aracın bulunduğu web sayfası.</p><div class="tags"><span>JavaScript</span><span>3 uygulama</span><span>Tarayıcıda işler</span></div><a href="#studio" class="text-link">Uygulamaları aç ↓</a></div></article>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about"><div class="wrap about-grid"><div><div class="eyebrow">TASARIM PRENSİPLERİ</div><h2>Karmaşayı azalt.<br><span>İşi tamamla.</span></h2></div><div class="about-points"><div><b>01</b><span><strong>Gerçek kullanım</strong><small>Önce gerçekten işe yarayan özellikler.</small></span></div><div><b>02</b><span><strong>Gizliliğe öncelik</strong><small>Bu sayfadaki metin, renk ve dosya işlemleri tarayıcında yapılır.</small></span></div><div><b>03</b><span><strong>Şeffaf kapsam</strong><small>Yeni özellikleri kullanıma açmadan önce test ederiz.</small></span></div></div></div></section>
+    <section class="contact wrap"><div><div class="eyebrow">BİR SONRAKİ ADIM</div><h2>Bir işin mi var? <span>Aracını seç.</span></h2><p>Hazır araçları dene veya geliştirmemizi istediğin bir şeyi bize bildir.</p></div><a class="button primary" href="#studio">Uygulamaları keşfet <span>↓</span></a></section>
+    <section class="section wrap contact-channels" id="contact"><div class="section-head"><div><div class="eyebrow">İLETİŞİM</div><h2>Bir önerin mi var? <span>Bize yaz.</span></h2><p>Geri bildirim, hata bildirimi veya yeni proje fikirleri için aşağıdaki kanallardan ulaşabilirsin.</p></div></div><div class="contact-grid"><a class="contact-card" href="https://www.instagram.com/velandrislabs/" target="_blank" rel="noopener noreferrer"><span class="contact-icon instagram">◎</span><span class="contact-copy"><strong>Instagram</strong><small>@velandrislabs</small></span><span class="contact-arrow">↗</span></a><a class="contact-card" href="https://github.com/wveleno" target="_blank" rel="noopener noreferrer"><span class="contact-icon github">⌘</span><span class="contact-copy"><strong>GitHub profili</strong><small>github.com/wveleno</small></span><span class="contact-arrow">↗</span></a><a class="contact-card" href="mailto:velandrislabs@gmail.com?subject=Velandris%20Labs%20-%20Geri%20bildirim"><span class="contact-icon email">✉</span><span class="contact-copy"><strong>E-posta</strong><small>velandrislabs@gmail.com</small></span><span class="contact-arrow">↗</span></a></div><p class="contact-note">E-posta bağlantısı, cihazındaki e-posta uygulamasını açar.</p></section>
+  </main>
+  <footer class="footer wrap"><a class="brand" href="#home" aria-label="Velandris Labs ana sayfa"><img src="assets/mark.svg" class="brand-logo" width="38" height="38" alt="Velandris Labs logosu"><span class="brand-wordmark"><strong>VELANDRIS<span>LABS</span></strong><small>GÜNLÜK İŞLER İÇİN ARAÇLAR</small></span></a><span>© <b id="year"></b> Velandris Labs</span><a class="back-top" href="#home">Başa dön ↑</a></footer>
+
+  <div class="modal-backdrop" id="appModal" hidden><section class="workspace" role="dialog" aria-modal="true" aria-labelledby="workspaceTitle"><div class="workspace-head"><div class="workspace-title"><img src="assets/mark.svg" alt="" width="36" height="36"><div><div class="eyebrow">VELANDRIS LABS / UYGULAMA</div><h2 id="workspaceTitle">Uygulama</h2></div></div><button class="close" id="closeModal" aria-label="Kapat">×</button></div><p class="workspace-desc" id="workspaceDesc"></p><div class="workspace-body" id="workspaceBody"></div><div class="workspace-foot"><span id="workspaceStatus" role="status" aria-live="polite">Hazır.</span><button class="button secondary small" id="clearWorkspace">Alanları temizle</button></div></section></div>
+</body>
+</html>
