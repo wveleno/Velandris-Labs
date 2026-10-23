@@ -1,6 +1,20 @@
 <!doctype html>
 <html lang="tr">
 <head>
+  <link rel="canonical" href="https://wveleno.github.io/Velandris-Labs/">
+  <script>
+    // Remove the ChatGPT referral tag from the visible URL without reloading the page.
+    (function () {
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("utm_source")?.toLowerCase() === "chatgpt.com") {
+          url.searchParams.delete("utm_source");
+          const cleanUrl = url.pathname + url.search + url.hash;
+          window.history.replaceState(window.history.state, document.title, cleanUrl);
+        }
+      } catch (_) { /* Ignore URL cleanup errors; site functionality should continue. */ }
+    })();
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07101b">
@@ -51,7 +65,7 @@
       <div class="section-head"><div><div class="eyebrow">UYGULAMALAR <span class="eyebrow-divider">/</span> 03 UYGULAMA</div><h2>İşine yarayanı <span>hemen aç.</span></h2><p>Sadece işe yarayan üç araç: görsellerini hazırla, yazma hızını ölç veya güçlü bir şifre oluştur.</p></div><label class="search"><span>⌕</span><input id="appSearch" type="search" placeholder="Örn. fotoğraf küçült, şifre, CSV…" aria-label="Uygulamalarda ara"></label></div>
       <div class="app-grid app-grid-v3" id="appGrid">
         <button class="app-card app-card-v3" data-app="imageflow" data-tags="görsel fotoğraf resim webp jpeg png sıkıştır küçült boyut toplu optimize"><div class="app-card-top"><span class="app-icon blue">▧</span><span class="app-category">GÖRSEL & DOSYA</span><span class="open-arrow">↗</span></div><h3>Görsel Atölyesi</h3><p>Birden fazla görseli küçült, WebP/JPEG/PNG biçimine dönüştür ve sonucu indirmeden önce karşılaştır.</p><div class="app-bottom"><span class="chip">Toplu işlem</span><span class="app-launch">Atölyeyi aç <b>→</b></span></div></button>
-        <button class="app-card app-card-v3" data-app="typingtest" data-tags="klavye hız testi yazma hızı kelime dakika wpm doğruluk performans"><div class="app-card-top"><span class="app-icon violet">⌨</span><span class="app-category">HIZ & PERFORMANS</span><span class="open-arrow">↗</span></div><h3>Klavye Hız Testi</h3><p>30 saniyede kaç doğru kelime yazabildiğini gör. Büyük/küçük harf ve noktalama puanı etkilemez.</p><div class="app-bottom"><span class="chip">30 saniye</span><span class="app-launch">Testi başlat <b>→</b></span></div></button>
+        <button class="app-card app-card-v3" data-app="typingtest" data-tags="klavye puan testi yazma hızı doğru kelime skor doğruluk performans"><div class="app-card-top"><span class="app-icon violet">⌨</span><span class="app-category">HIZ & PERFORMANS</span><span class="open-arrow">↗</span></div><h3>Klavye Hız Testi</h3><p>30 saniyede kaç doğru kelime yazabildiğini gör. Büyük/küçük harf ve noktalama puanı etkilemez.</p><div class="app-bottom"><span class="chip">30 saniye</span><span class="app-launch">Testi başlat <b>→</b></span></div></button>
         <button class="app-card app-card-v3" data-app="password" data-tags="şifre parola güvenlik güçlü password rastgele üretici hesap gizlilik"><div class="app-card-top"><span class="app-icon green">⌁</span><span class="app-category">GÜVENLİK</span><span class="open-arrow">↗</span></div><h3>Güçlü Şifre Üretici</h3><p>Şifre uzunluğunu ve kullanacağın karakterleri seç. Şifre cihazında, rastgele olarak oluşturulur.</p><div class="app-bottom"><span class="chip">Yerel üretim</span><span class="app-launch">Şifre üret <b>→</b></span></div></button>
       </div>
       <p class="empty-state" id="emptyApps" hidden>Bu aramayla eşleşen uygulama bulunamadı.</p>
