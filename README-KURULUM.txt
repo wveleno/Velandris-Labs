@@ -1,7 +1,7 @@
 VELANDRIS LABS — SON HALİ
 
 PAKET İÇERİĞİ
-- index.html: ChatGPT paylaşımından gelebilen utm_source=chatgpt.com parametresini açılışta URL'den temizler; mevcut Cloudflare Web Analytics kodu korunur.
+- index.html: ChatGPT paylaşımından gelebilen utm_source=chatgpt.com parametresini açılışta URL'den temizler; mevcut Cloudflare Web Analytics kodu korunur. Ana sayfa açıklamaları puan sistemine göre güncellendi.
 - app.js: Klavye testinde puan sistemi ve ortak liderlik tablosu arayüzü.
 - config.js: Aktif Cloudflare Worker API adresi tanımlı.
 - style.css ve assets/mark.svg: Sitenin görünümü ve logo varlığı.
@@ -39,3 +39,9 @@ NOTLAR
 - Bu işlem dosyaları hazırlar; GitHub'a veya Cloudflare'a kendiliğinden yükleme yapmaz.
 - Cloudflare Web Analytics verilerinin toplanması için internet tarayıcısında Analytics beaconi engellenmemiş olmalıdır.
 - URL temizliği yalnızca utm_source=chatgpt.com parametresini kaldırır; diğer sorgu parametreleri korunur.
+
+
+KOD KONTROLÜ
+- Gelen önceki Worker kodu burada 147 satır / 11.467 karakterdi. Bu Worker sürümü 190 satır / 13.658 karakterdir; satır sayısı kısalmadı, kod hacmi yaklaşık %19 arttı. Editörde görünen satır sarımları bu sayımla aynı olmayabilir.
+- app.js ve worker/index.js JavaScript sözdizimi denetiminden geçirildi.
+- D1 veritabanı şeması değiştirilmedi; worker/schema.sql dosyasını tekrar çalıştırma.
