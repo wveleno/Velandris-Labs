@@ -2,10 +2,10 @@ VELANDRIS LABS — SON HALİ
 
 PAKET İÇERİĞİ
 - index.html: ChatGPT paylaşımından gelebilen utm_source=chatgpt.com parametresini açılışta URL'den temizler; mevcut Cloudflare Web Analytics kodu korunur. Ana sayfa açıklamaları puan sistemine göre güncellendi.
-- app.js: Klavye testinde puan sistemi ve ortak liderlik tablosu arayüzü.
+- app.js: Klavye testinde puan sistemi, puan yanında anlık kelime/dk hızı ve eski API yanıtları için puan uyumluluğu.
 - config.js: Aktif Cloudflare Worker API adresi tanımlı.
 - style.css ve assets/mark.svg: Sitenin görünümü ve logo varlığı.
-- worker/index.js: Puanı sunucuda hesaplayan, puana göre sıralayan ve uygunsuz kullanıcı adlarını filtreleyen Worker.
+- worker/index.js: Puanı sunucuda hesaplayan, doğru kelime sayısına göre sıralayan ve uygunsuz kullanıcı adlarını filtreleyen Worker.
 - worker/schema.sql: Mevcut D1 tablo şemasının referansı; yeniden çalıştırman gerekmiyor.
 
 PUANLAMA
@@ -26,14 +26,14 @@ CLOUDFLARE WORKER GÜNCELLEME
 1. Cloudflare > Workers & Pages > velandris-leaderboard-api > Edit code.
 2. worker/index.js dosyasının TAMAMINI Worker editörüne yapıştır.
 3. Deploy yap.
-4. Sağlık kontrolü: https://velandris-leaderboard-api.furkanaybakan11.workers.dev/api/health
+4. Yeni API sıralama yanıtı `points` alanını ve puana göre sıralamayı kullanır. Sağlık kontrolü: https://velandris-leaderboard-api.furkanaybakan11.workers.dev/api/health
    Başarılı yanıt içinde "ok": true ve "version": 2 görünmeli.
 
 TEST
 1. Siteyi Ctrl+F5 ile yenile.
 2. Klavye Hız Testi'ni aç ve 30 saniyelik testi tamamla.
 3. Örneğin 12 doğru tamamlanan kelime varsa sonuç 12 puan olmalı.
-4. Temiz bir kullanıcı adıyla skoru paylaş ve liderlik tablosunda puan olarak göründüğünü kontrol et.
+4. Temiz bir kullanıcı adıyla skoru paylaş; örneğin 21 doğru kelime = 21 puan ve 42 kelime/dk görünmeli. Liderlik tablosunda da 21 puan görünmeli.
 
 NOTLAR
 - Bu işlem dosyaları hazırlar; GitHub'a veya Cloudflare'a kendiliğinden yükleme yapmaz.
@@ -45,3 +45,9 @@ KOD KONTROLÜ
 - Gelen önceki Worker kodu burada 147 satır / 11.467 karakterdi. Bu Worker sürümü 190 satır / 13.658 karakterdir; satır sayısı kısalmadı, kod hacmi yaklaşık %19 arttı. Editörde görünen satır sarımları bu sayımla aynı olmayabilir.
 - app.js ve worker/index.js JavaScript sözdizimi denetiminden geçirildi.
 - D1 veritabanı şeması değiştirilmedi; worker/schema.sql dosyasını tekrar çalıştırma.
+
+
+SON DÜZELTME (puan ve hız)
+- Liderlik tablosu, Worker henüz güncellenmemişken `points` alanı gelmezse `correctWords` değerini puan olarak kullanır; bu, ekrandaki 0 puan sorununa karşı uyumluluk sağlar.
+- Puan kutusu yanında kelime/dk hızı görünür. Hız, 30 saniyelik testin geçen süresindeki doğru kelimeye göre hesaplanır; test bittiğinde 21 doğru kelime = 42 kelime/dk.
+- Kalıcı çözüm için hem GitHub `app.js` dosyasını hem de Cloudflare Worker `worker/index.js` kodunu güncelle.
