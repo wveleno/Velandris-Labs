@@ -334,4 +334,55 @@
   function luminance(hex){return rgb(hex).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);}
   function contrast(a,b){const l1=luminance(a),l2=luminance(b);return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);}
   function updateColorSample(){const main=$('#mainColor')?.value,fg=$('#fgColor')?.value,bg=$('#bgColor')?.value;if(main)$('#mainHex').textContent=main.toUpperCase();if(fg&&bg){const sample=$('#colorSample');sample.style.color=fg;sample.style.background=bg;}}
+
+  // Web3Forms iş birliği formu
+  const collaborationForm = document.getElementById('collaborationForm');
+  if (collaborationForm) {
+    collaborationForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const submitButton = collaborationForm.querySelector('button[type="submit"]');
+      const formStatus = document.getElementById('collaborationStatus');
+      const honeypot = collaborationForm.querySelector('[name="botcheck"]');
+      if (honeypot?.checked) return;
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.dataset.originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<span aria-hidden="true">…</span> Gönderiliyor';
+      }
+      if (formStatus) {
+        formStatus.className = 'collaboration-status';
+        formStatus.textContent = 'Mesajın gönderiliyor, lütfen bekle…';
+      }
+      try {
+        const response = await fetch(collaborationForm.action, {
+          method: 'POST',
+          body: new FormData(collaborationForm),
+          headers: { Accept: 'application/json' }
+        });
+        let result;
+        try { result = await response.json(); }
+        catch { throw new Error('Sunucudan beklenmeyen bir yanıt geldi. Lütfen tekrar dene.'); }
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || 'Mesaj gönderilemedi. Lütfen daha sonra tekrar dene.');
+        }
+        collaborationForm.reset();
+        if (formStatus) {
+          formStatus.className = 'collaboration-status is-success';
+          formStatus.textContent = 'Mesajın başarıyla gönderildi. İlgin için teşekkürler!';
+        }
+      } catch (error) {
+        if (formStatus) {
+          formStatus.className = 'collaboration-status is-error';
+          formStatus.textContent = `${error.message || 'Bir bağlantı hatası oluştu.'} İstersen velandrislabs@gmail.com adresine doğrudan e-posta gönderebilirsin.`;
+        }
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = submitButton.dataset.originalText || '<span aria-hidden="true">➤</span> Gönder';
+          delete submitButton.dataset.originalText;
+        }
+      }
+    });
+  }
+
 })();

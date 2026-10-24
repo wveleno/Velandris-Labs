@@ -107,3 +107,32 @@
 .leaderboard-player{min-width:0;display:grid;gap:3px}.leaderboard-player strong{font-size:12px;color:#e7f3ff;overflow-wrap:anywhere}.leaderboard-player small{font-size:9px;color:#7f9db2;line-height:1.4}.leaderboard-speed{font-size:14px;color:#63e2f8;white-space:nowrap;font-variant-numeric:tabular-nums}.leaderboard-empty{padding:19px 13px;text-align:center;border:1px dashed #29465a;border-radius:11px;color:#8ba7bb;font-size:11px;line-height:1.7}
 .leaderboard-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.leaderboard-footer>span{font-size:9px;color:#7794a8}.leaderboard-footer .button:disabled{opacity:.45;cursor:not-allowed}.leaderboard-disclaimer{margin:10px 0 0;color:#6f8a9f;font-size:9px;line-height:1.6}
 @media(max-width:520px){.typing-stats .typing-speed-inline{font-size:8px}.leaderboard-panel{padding:12px}.leaderboard-heading h3{font-size:18px}.leaderboard-controls{grid-template-columns:1fr}.leaderboard-period-wrap{max-width:none}.leaderboard-row{gap:8px;padding:9px}.leaderboard-speed{font-size:12px}.leaderboard-footer{align-items:flex-start;flex-direction:column}.leaderboard-footer .button{width:100%}}
+
+
+/* İş birliği ve reklam formu */
+.collaboration-section{padding-top:34px;padding-bottom:78px;scroll-margin-top:100px}
+.collaboration-section .section-head{align-items:flex-end}
+.collaboration-section .section-head p{max-width:680px}
+.collaboration-shell{max-width:850px;margin-inline:auto;padding:clamp(18px,3.3vw,34px);border:1px solid #294359;border-radius:20px;background:linear-gradient(145deg,#0c1a28f5,#09131ff7);box-shadow:0 20px 65px #0003,inset 0 1px #ffffff06}
+.collaboration-form{display:grid;gap:17px}
+.collaboration-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}
+.collaboration-field{display:grid;gap:7px;min-width:0}
+.collaboration-field.field-wide{grid-column:1/-1}
+.collaboration-field>span{font-size:11px;font-weight:800;color:#c5d8e8}
+.collaboration-field>span b{color:var(--cyan)}
+.collaboration-field>span small{font-size:10px;font-weight:500;color:var(--soft)}
+.collaboration-field input,.collaboration-field select,.collaboration-field textarea{width:100%;min-width:0;border:1px solid #2b465b;border-radius:10px;background:#07121e;color:var(--text);padding:12px 13px;font-size:12px;outline:none;transition:border-color .18s,box-shadow .18s,background .18s}
+.collaboration-field input,.collaboration-field select{min-height:45px}
+.collaboration-field textarea{resize:vertical;min-height:138px;line-height:1.7}
+.collaboration-field input::placeholder,.collaboration-field textarea::placeholder{color:#637d92}
+.collaboration-field select:invalid{color:#71879a}
+.collaboration-field input:focus,.collaboration-field select:focus,.collaboration-field textarea:focus{border-color:#53c8e8;box-shadow:0 0 0 3px #35c6ee18;background:#091725}
+.collaboration-submit{width:100%;min-height:49px;font-size:13px}
+.collaboration-submit:disabled{opacity:.65;cursor:wait;transform:none}
+.collaboration-status{margin:0;color:#83a0b5;font-size:11px;line-height:1.65}
+.collaboration-status.is-success{color:#6be4bb}
+.collaboration-status.is-error{color:#ff9eae}
+.collaboration-privacy{margin:-10px 0 0;color:#627f95;font-size:10px;line-height:1.7}
+.collaboration-honeypot{display:none!important}
+@media(max-width:760px){.collaboration-section{padding-top:24px;padding-bottom:52px}.collaboration-section .section-head{align-items:flex-start;flex-direction:column}.collaboration-shell{padding:18px;border-radius:16px}.collaboration-fields{gap:15px}.collaboration-field input,.collaboration-field select,.collaboration-field textarea{font-size:13px}}
+@media(max-width:520px){.collaboration-fields{grid-template-columns:minmax(0,1fr)}.collaboration-field.field-wide{grid-column:auto}.collaboration-submit{width:100%}}

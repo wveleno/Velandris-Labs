@@ -92,6 +92,67 @@
     <section class="section about-section" id="about"><div class="wrap about-grid"><div><div class="eyebrow">TASARIM PRENSİPLERİ</div><h2>Karmaşayı azalt.<br><span>İşi tamamla.</span></h2></div><div class="about-points"><div><b>01</b><span><strong>Gerçek kullanım</strong><small>Önce gerçekten işe yarayan özellikler.</small></span></div><div><b>02</b><span><strong>Gizliliğe öncelik</strong><small>Bu sayfadaki metin, renk ve dosya işlemleri tarayıcında yapılır.</small></span></div><div><b>03</b><span><strong>Şeffaf kapsam</strong><small>Yeni özellikleri kullanıma açmadan önce test ederiz.</small></span></div></div></div></section>
     <section class="contact wrap"><div><div class="eyebrow">BİR SONRAKİ ADIM</div><h2>Bir işin mi var? <span>Aracını seç.</span></h2><p>Hazır araçları dene veya geliştirmemizi istediğin bir şeyi bize bildir.</p></div><a class="button primary" href="#studio">Uygulamaları keşfet <span>↓</span></a></section>
     <section class="section wrap contact-channels" id="contact"><div class="section-head"><div><div class="eyebrow">İLETİŞİM</div><h2>Bir önerin mi var? <span>Bize yaz.</span></h2><p>Geri bildirim, hata bildirimi veya yeni proje fikirleri için aşağıdaki kanallardan ulaşabilirsin.</p></div></div><div class="contact-grid"><a class="contact-card" href="https://www.instagram.com/velandrislabs/" target="_blank" rel="noopener noreferrer"><span class="contact-icon instagram">◎</span><span class="contact-copy"><strong>Instagram</strong><small>@velandrislabs</small></span><span class="contact-arrow">↗</span></a><a class="contact-card" href="https://github.com/wveleno" target="_blank" rel="noopener noreferrer"><span class="contact-icon github">⌘</span><span class="contact-copy"><strong>GitHub profili</strong><small>github.com/wveleno</small></span><span class="contact-arrow">↗</span></a><a class="contact-card" href="mailto:velandrislabs@gmail.com?subject=Velandris%20Labs%20-%20Geri%20bildirim"><span class="contact-icon email">✉</span><span class="contact-copy"><strong>E-posta</strong><small>velandrislabs@gmail.com</small></span><span class="contact-arrow">↗</span></a></div><p class="contact-note">E-posta bağlantısı, cihazındaki e-posta uygulamasını açar.</p></section>
+    <section class="section wrap collaboration-section" id="collaboration">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">İŞ BİRLİĞİ & İLETİŞİM</div>
+          <h2>Birlikte <span>bir şeyler üretelim.</span></h2>
+          <p>Reklam, sponsorluk, yazılım projeleri veya yeni fikirler için bize mesaj bırak. Teklifini inceleyip e-posta üzerinden dönüş yapalım.</p>
+        </div>
+        <span class="section-count">VELANDRIS / İŞ BİRLİĞİ</span>
+      </div>
+      <div class="collaboration-shell">
+        <form id="collaborationForm" class="collaboration-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="7151e492-ef2d-44a1-97c3-87099481cacb">
+          <input type="hidden" name="subject" value="Velandris Labs | Yeni iş birliği başvurusu">
+          <input type="hidden" name="from_name" value="Velandris Labs web sitesi">
+          <div class="collaboration-fields">
+            <label class="collaboration-field field-wide" for="collabType">
+              <span>Talep türü <b>*</b></span>
+              <select id="collabType" name="request_type" required>
+                <option value="" selected disabled>Bir seçenek belirle</option>
+                <option>Reklam ve sponsorluk</option>
+                <option>İş birliği teklifi</option>
+                <option>Yazılım projesi</option>
+                <option>Program önerisi</option>
+                <option>Geri bildirim</option>
+                <option>Diğer</option>
+              </select>
+            </label>
+            <label class="collaboration-field" for="collabName">
+              <span>Adınız <b>*</b></span>
+              <input id="collabName" type="text" name="name" autocomplete="given-name" maxlength="100" placeholder="Adınız" required>
+            </label>
+            <label class="collaboration-field" for="collabSurname">
+              <span>Soyadınız</span>
+              <input id="collabSurname" type="text" name="surname" autocomplete="family-name" maxlength="100" placeholder="Soyadınız">
+            </label>
+            <label class="collaboration-field field-wide" for="collabEmail">
+              <span>E-posta adresiniz <b>*</b></span>
+              <input id="collabEmail" type="email" name="email" autocomplete="email" maxlength="254" placeholder="ornek@firma.com" required>
+            </label>
+            <label class="collaboration-field" for="collabPhone">
+              <span>Telefon <small>(isteğe bağlı)</small></span>
+              <input id="collabPhone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="+90 5XX XXX XX XX">
+            </label>
+            <label class="collaboration-field" for="collabCompany">
+              <span>Şirket / Marka <small>(isteğe bağlı)</small></span>
+              <input id="collabCompany" type="text" name="company" autocomplete="organization" maxlength="150" placeholder="Şirket veya marka adı">
+            </label>
+            <label class="collaboration-field field-wide" for="collabMessage">
+              <span>Teklifiniz veya projeniz hakkında <b>*</b></span>
+              <textarea id="collabMessage" name="message" rows="5" maxlength="5000" placeholder="Kısaca fikrinizden, projenizden veya iş birliği teklifinizden bahsedin..." required></textarea>
+            </label>
+          </div>
+          <div class="collaboration-honeypot" aria-hidden="true">
+            <label>Bu alanı boş bırakın <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <button class="button primary collaboration-submit" type="submit"><span aria-hidden="true">➤</span> Gönder</button>
+          <p id="collaborationStatus" class="collaboration-status" role="status" aria-live="polite">Mesajın e-posta yoluyla iletilir. Lütfen parola veya hassas bilgi paylaşma.</p>
+          <p class="collaboration-privacy">Form gönderimleri Web3Forms aracılığıyla iletilir ve başvuruna yanıt vermek için kullanılır.</p>
+        </form>
+      </div>
+    </section>
   </main>
   <footer class="footer wrap"><a class="brand" href="#home" aria-label="Velandris Labs ana sayfa"><img src="assets/mark.svg" class="brand-logo" width="38" height="38" alt="Velandris Labs logosu"><span class="brand-wordmark"><strong>VELANDRIS<span>LABS</span></strong><small>GÜNLÜK İŞLER İÇİN ARAÇLAR</small></span></a><span>© <b id="year"></b> Velandris Labs</span><a class="back-top" href="#home">Başa dön ↑</a></footer>
 
