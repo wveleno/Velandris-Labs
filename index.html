@@ -25,6 +25,57 @@
   <title>Velandris Labs — Pratik dijital araçlar</title>
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
+  <style id="collaboration-inline-layout-fix">
+    /* İş birliği formu için doğrudan sayfaya gömülü görünüm düzeltmesi.
+       Böylece GitHub Pages'te eski style.css önbellekte kalsa bile form düzgün yerleşir. */
+    #collaboration.collaboration-section { padding-top: 34px; padding-bottom: 78px; scroll-margin-top: 100px; }
+    #collaboration .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 26px; margin-bottom: 29px; }
+    #collaboration .section-head > div { min-width: 0; }
+    #collaboration .section-head p { max-width: 680px; margin: 0; color: var(--muted, #91a7bd); font-size: 13px; line-height: 1.75; }
+    #collaboration .section-count { flex-shrink: 0; font-size: 9px; letter-spacing: 1.3px; color: var(--muted, #91a7bd); }
+    #collaboration .collaboration-shell { width: 100%; max-width: 850px; margin: 0 auto; padding: clamp(18px, 3.3vw, 34px); border: 1px solid #294359; border-radius: 20px; background: linear-gradient(145deg, #0c1a28f5, #09131ff7); box-shadow: 0 20px 65px #0003, inset 0 1px #ffffff06; }
+    #collaboration .collaboration-form { display: grid; gap: 17px; width: 100%; margin: 0; }
+    #collaboration .collaboration-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; width: 100%; }
+    #collaboration .collaboration-field { display: grid; align-content: start; gap: 7px; min-width: 0; margin: 0; }
+    #collaboration .collaboration-field.field-wide { grid-column: 1 / -1; }
+    #collaboration .collaboration-field > span { display: block; font-size: 11px; font-weight: 800; color: #c5d8e8; }
+    #collaboration .collaboration-field > span b { color: var(--cyan, #54e3ff); }
+    #collaboration .collaboration-field > span small { font-size: 10px; font-weight: 500; color: var(--soft, #607c93); }
+    #collaboration .collaboration-field input,
+    #collaboration .collaboration-field select,
+    #collaboration .collaboration-field textarea { display: block; width: 100%; max-width: 100%; min-width: 0; margin: 0; border: 1px solid #2b465b; border-radius: 10px; background: #07121e; color: var(--text, #edf6ff); padding: 12px 13px; font: inherit; font-size: 12px; line-height: 1.5; outline: none; box-shadow: none; transition: border-color .18s, box-shadow .18s, background .18s; }
+    #collaboration .collaboration-field input,
+    #collaboration .collaboration-field select { min-height: 45px; }
+    #collaboration .collaboration-field textarea { min-height: 138px; resize: vertical; line-height: 1.7; }
+    #collaboration .collaboration-field input::placeholder,
+    #collaboration .collaboration-field textarea::placeholder { color: #637d92; opacity: 1; }
+    #collaboration .collaboration-field select:invalid { color: #71879a; }
+    #collaboration .collaboration-field input:focus,
+    #collaboration .collaboration-field select:focus,
+    #collaboration .collaboration-field textarea:focus { border-color: #53c8e8; box-shadow: 0 0 0 3px #35c6ee18; background: #091725; }
+    #collaboration .collaboration-honeypot { display: none !important; }
+    #collaboration .collaboration-submit { display: inline-flex; align-items: center; justify-content: center; gap: 9px; width: 100%; min-height: 49px; margin: 0; font-size: 13px; }
+    #collaboration .collaboration-submit:disabled { opacity: .65; cursor: wait; transform: none; }
+    #collaboration .collaboration-status { margin: 0; color: #83a0b5; font-size: 11px; line-height: 1.65; }
+    #collaboration .collaboration-status.is-success { color: #6be4bb; }
+    #collaboration .collaboration-status.is-error { color: #ff9eae; }
+    #collaboration .collaboration-privacy { margin: -10px 0 0; color: #7891a5; font-size: 10px; line-height: 1.7; }
+    @media (max-width: 760px) {
+      #collaboration.collaboration-section { padding-top: 24px; padding-bottom: 52px; }
+      #collaboration .section-head { align-items: flex-start; flex-direction: column; gap: 10px; }
+      #collaboration .collaboration-shell { padding: 18px; border-radius: 16px; }
+      #collaboration .collaboration-fields { gap: 15px; }
+      #collaboration .collaboration-field input,
+      #collaboration .collaboration-field select,
+      #collaboration .collaboration-field textarea { font-size: 13px; }
+    }
+    @media (max-width: 520px) {
+      #collaboration .collaboration-fields { grid-template-columns: minmax(0, 1fr); }
+      #collaboration .collaboration-field.field-wide { grid-column: auto; }
+      #collaboration .collaboration-submit { width: 100%; }
+      #collaboration .section-head h2 { font-size: clamp(27px, 8vw, 36px); }
+    }
+  </style>
   <script src="config.js" defer></script>
   <script src="app.js" defer></script>
 </head>
