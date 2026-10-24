@@ -134,7 +134,7 @@
       <span class="brand-wordmark"><strong>VELANDRIS<span>LABS</span></strong><small>PRATİK DİJİTAL ARAÇLAR</small></span>
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
-    <nav id="nav" aria-label="Ana menü"><a href="#studio">Uygulamalar</a><a href="#usecases">Neler yapabilirsin?</a><a href="#projects">Projeler</a><a href="programlar.html">Ücretsiz Programlar</a><a href="#about">Hakkında</a></nav>
+    <nav id="nav" aria-label="Ana menü"><a href="#studio">Uygulamalar</a><a href="#typingFeature">Klavye Arenası</a><a href="#projects">Projeler</a><a href="programlar.html">Ücretsiz Programlar</a><a href="#about">Hakkında</a></nav>
     <a class="nav-cta" href="#contact">İletişim <span>↗</span></a>
   </header>
   <main id="home">
@@ -165,13 +165,14 @@
         <h2 id="typingFeatureTitle">Kendini test etmeye <span>var mısın?</span></h2>
         <p>Klavye hızını ölç, doğruluğunu gör ve diğer kullanıcılarla yarış!</p>
         <button class="button primary typing-feature-button" data-open-app="typingtest">Hemen Test Et <span aria-hidden="true">→</span></button>
-        <div class="typing-feature-note"><span aria-hidden="true">⌨</span> Ücretsiz · Hesap gerekmez · Skorunu paylaşabilirsin</div>
       </div>
-      <div class="typing-feature-preview" aria-hidden="true">
-        <div class="typing-preview-top"><span><i></i> TEST ÖN İZLEMESİ</span><span>VELANDRIS / 01</span></div>
-        <div class="typing-preview-clock"><span>TEST SÜRESİ</span><strong>01:00</strong><small>hazır olduğunda başla</small></div>
-        <div class="typing-preview-stats"><div><span>PUAN</span><strong>00</strong></div><div><span>DOĞRULUK</span><strong>—</strong></div><div><span>HIZ</span><strong>— <small>kelime/dk</small></strong></div></div>
-        <div class="typing-preview-words" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="typing-feature-visual" aria-hidden="true">
+        <div class="typing-feature-keyboard">
+          <div class="typing-feature-keyboard-head"><span></span><b>VELANDRIS / TYPE</b></div>
+          <div class="typing-feature-key-row"><i>V</i><i>E</i><i>L</i><i>A</i><i>N</i></div>
+          <div class="typing-feature-key-row"><i>D</i><i>R</i><i>I</i><i>S</i><i>↵</i></div>
+          <div class="typing-feature-key-row"><i class="typing-feature-space"></i></div>
+        </div>
       </div>
     </section>
 
@@ -183,15 +184,6 @@
       </div>
       <p class="empty-state" id="emptyApps" hidden>Bu aramayla eşleşen uygulama bulunamadı.</p>
     </section>
-
-    <section class="section usecase-section" id="usecases"><div class="wrap">
-      <div class="section-head"><div><div class="eyebrow">İKİ NET ARAÇ</div><h2>İhtiyacını seç, <span>hemen kullan.</span></h2><p>Gereksiz kalabalık yok. Her bölüm belirli bir işi tamamlamak için hazırlandı.</p></div><span class="section-count">2 UYGULAMA</span></div>
-      <div class="usecase-grid">
-        <article class="usecase-card"><div class="usecase-top"><span class="usecase-icon usecase-blue">▧</span><span class="usecase-label">GÖRSEL & DOSYA</span></div><h3>Görsellerini hazırla.</h3><p>Birden fazla fotoğrafı tek seferde boyutlandır, sıkıştır veya web için uygun formata dönüştür.</p><div class="usecase-links"><button data-open-app="imageflow">Görsel Atölyesi'ni aç ↗</button></div></article>
-        <article class="usecase-card"><div class="usecase-top"><span class="usecase-icon usecase-cyan">⌁</span><span class="usecase-label">GÜVENLİK</span></div><h3>Güçlü bir şifre oluştur.</h3><p>Uzunluğu ve karakter türlerini seç. Şifre doğrudan tarayıcında üretilir.</p><div class="usecase-links"><button data-open-app="password">Şifre oluşturucuyu aç ↗</button></div></article>
-      </div>
-      <p class="workflow-note"><span>ⓘ</span> Görsel işleme ve şifre üretimi tarayıcında çalışır. Klavye testi puanını istersen ortak sıralamaya gönderebilirsin.</p>
-    </div></section>
 
     <section class="section wrap" id="projects">
       <div class="section-head"><div><div class="eyebrow">PROJE VİTRİNİ</div><h2>Deneyerek <span>geliştiriyoruz.</span></h2><p>Velandris çatısı altında geliştirilen projeler ve araçlar.</p></div><span class="section-count">PROJELER / 02</span></div>
