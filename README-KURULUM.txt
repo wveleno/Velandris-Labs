@@ -9,7 +9,7 @@ PAKET İÇERİĞİ
 - worker/schema.sql: Mevcut D1 tablo şemasının referansı; yeniden çalıştırman gerekmiyor.
 
 PUANLAMA
-- 30 saniyelik testte her doğru tamamlanan kelime = 1 puan.
+- 60 saniyelik testte her doğru tamamlanan kelime = 1 puan.
 - Yanlış kelime = 0 puan.
 - Eşit puan durumunda doğruluk yüzdesi yüksek olan oyuncu üstte olur.
 - Sağlayıcıdaki mevcut D1 tablosu korunur; SQL'i tekrar çalıştırma.
@@ -31,9 +31,9 @@ CLOUDFLARE WORKER GÜNCELLEME
 
 TEST
 1. Siteyi Ctrl+F5 ile yenile.
-2. Klavye Hız Testi'ni aç ve 30 saniyelik testi tamamla.
+2. Klavye Hız Testi'ni aç ve 60 saniyelik testi tamamla.
 3. Örneğin 12 doğru tamamlanan kelime varsa sonuç 12 puan olmalı.
-4. Temiz bir kullanıcı adıyla skoru paylaş; örneğin 21 doğru kelime = 21 puan ve 42 kelime/dk görünmeli. Liderlik tablosunda da 21 puan görünmeli.
+4. Temiz bir kullanıcı adıyla skoru paylaş; örneğin 21 doğru kelime = 21 puan ve 21 kelime/dk görünmeli. Liderlik tablosunda da 21 puan görünmeli.
 
 NOTLAR
 - Bu işlem dosyaları hazırlar; GitHub'a veya Cloudflare'a kendiliğinden yükleme yapmaz.
@@ -44,10 +44,11 @@ NOTLAR
 KOD KONTROLÜ
 - Gelen önceki Worker kodu burada 147 satır / 11.467 karakterdi. Bu Worker sürümü 190 satır / 13.658 karakterdir; satır sayısı kısalmadı, kod hacmi yaklaşık %19 arttı. Editörde görünen satır sarımları bu sayımla aynı olmayabilir.
 - app.js ve worker/index.js JavaScript sözdizimi denetiminden geçirildi.
-- D1 veritabanı şeması değiştirilmedi; worker/schema.sql dosyasını tekrar çalıştırma.
+- D1 veritabanı şeması değiştirilmedi; worker/schema.sql dosyasını tekrar çalıştırma. Worker güncellemesi skor sıralamasını ve mevcut D1 tablolarını korur.
 
 
 SON DÜZELTME (puan ve hız)
 - Liderlik tablosu, Worker henüz güncellenmemişken `points` alanı gelmezse `correctWords` değerini puan olarak kullanır; bu, ekrandaki 0 puan sorununa karşı uyumluluk sağlar.
-- Puan kutusu yanında kelime/dk hızı görünür. Hız, 30 saniyelik testin geçen süresindeki doğru kelimeye göre hesaplanır; test bittiğinde 21 doğru kelime = 42 kelime/dk.
-- Kalıcı çözüm için hem GitHub `app.js` dosyasını hem de Cloudflare Worker `worker/index.js` kodunu güncelle.
+- Puan kutusu yanında kelime/dk hızı görünür. Hız, 60 saniyelik testteki doğru kelimelere göre hesaplanır; test bittiğinde 21 doğru kelime = 21 kelime/dk.
+- Bu sürümde test süresi tam 60 saniyedir; istemci, sunucunun 60 saniyelik süreyi ve uzun metni doğrulamasını bekler.
+- Skor paylaşımını etkinleştirmek için GitHub Pages dosyalarına ek olarak Cloudflare Worker `worker/index.js` dosyasını da güncelle ve deploy et. D1 şemasını değiştirme.
