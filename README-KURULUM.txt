@@ -3,7 +3,7 @@ VELANDRIS LABS — GÜNCEL PROJE PAKETİ
 SİTE DOSYALARI
 - index.html, style.css, app.js, config.js: ana site ve tarayıcı araçları
 - programlar.html: ücretsiz programlar kataloğu
-- kvkk.html: kısa Gizlilik ve Veri Kullanımı açıklaması
+- kvkk.html: kısa Gizlilik açıklaması (site verilerinin mevcut kullanımı)
 - cerezler.html: eski bağlantı için kvkk.html içindeki çerez bölümüne yönlendirme
 - assets/mark.svg: logo
 - worker/: klavye sıralaması API kaynağı ve D1 şeması
@@ -26,5 +26,7 @@ GITHUB PAGES'E YÜKLEME
 CLOUDFLARE WORKER
 worker/index.js bakım modunda hazırlanmıştır. Çevrim içi sıralama tekrar açılmadan önce eski D1 kayıtları ve veri saklama/aktarımı ayrıca gözden geçirilmelidir. SQL şemasını yeniden çalıştırma; mevcut tabloyu silmez.
 
-HUKUKİ NOT
-Bu sayfa, sitenin mevcut teknik davranışını sade biçimde açıklar; tek başına hukuki uygunluk garantisi veya tamamlanmış resmî KVKK aydınlatma metni değildir. Kanun'un 10. maddesi kapsamındaki resmî aydınlatmada veri sorumlusunun gerçek kişi adı-soyadı veya tüzel kişi unvanı belirtilmelidir. Velandris Labs marka adı tek başına bu kimlik bilgisinin yerini tutmaz. Bu nedenle site ziyaretçisine gerçek olmayan/uydurma bir kimlik ya da doldurulacak köşeli parantezli alan gösterilmez.
+GIZLILIK SAYFASI HAKKINDA
+- Ziyaretçiye gerçek kişi/şirket kimliği veya tebligat adresi için doldurulacak alan gösterilmez.
+- Sayfa, sitenin mevcut teknik davranışını anlatan kısa bir gizlilik bilgilendirmesidir; resmî KVKK m.10 aydınlatma metni olduğu veya tek başına hukuki uygunluk sağladığı iddia edilmez.
+- İleride kullanıcı verileri sunucuya kaydedilir, skor paylaşımı açılır, analitik/reklam/üyelik eklenirse veri akışı yeniden değerlendirilmelidir.
