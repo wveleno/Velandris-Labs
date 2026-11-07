@@ -3,8 +3,9 @@ const ALLOWED_ORIGINS = new Set([
   "https://velandrislabs.netlify.app"
 ]);
 const DURATION_MS = 60_000;
-const MIN_SUBMIT_MS = DURATION_MS;
-const MAX_SUBMIT_MS = 120_000;
+const MAINTENANCE_MODE = true; // KVKK / data-retention review: no leaderboard reads or writes.
+const MIN_SUBMIT_MS = 58_000;
+const MAX_SUBMIT_MS = 180_000;
 const WORD_BANK = `bugün yarın zaman dünya insan hayat düşünce fikir çözüm çalışma emek başarı öğrenmek geliştirmek tasarım yazılım teknoloji üretim paylaşmak keşfetmek denemek düzenlemek oluşturmak başlamak bitirmek hızlı doğru dikkat sakin güçlü kolay küçük büyük farklı yeni güzel gerçek önemli değer fayda sonuç hedef plan yöntem adım süreç alışkanlık ihtiyaç amaç araç uygulama ekran klavye pencere dosya klasör bilgi veri metin içerik görsel renk bağlantı sayfa web tarayıcı cihaz bilgisayar telefon öğrenci öğretmen ekip kullanıcı proje sistem hizmet deneyim kalite güvenlik gizlilik performans hız doğruluk denge odak enerji düzen akış liste tablo satır sütun kayıt alan ayar seçenek kontrol test örnek belge rapor kaynak sonuç ilerleme değişim gelişim fırsat merak üretici geliştirici yazar okur oyuncu taslak notlar görev iş planlama yöntem odaklanmak düşünmek anlamak anlatmak yazmak okumak çizmek görmek duymak seçmek bulmak çözmek ölçmek hesaplamak karşılaştırmak azaltmak artırmak sadeleştirmek iyileştirmek hızlandırmak korumak kullanmak denetlemek tamamlamak işe yarar verimli tutarlı anlaşılır güvenilir erişilebilir yaratıcı pratik esnek modern sade temiz parlak kararlı dikkatli hafif akıllı çevik düzenli faydalı etkili bağlantılı yerel hızlıca güvenle adımlar ayrıntı örnekler içerikler dosyalar görseller sayılar harfler karakterler kelimeler cümleler araçlar fikirler insanlar işler merak beceri deneyim gelişme hedefler`.trim().split(/\s+/u);
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function headersFor(origin) {
@@ -21,18 +22,13 @@ function headersFor(origin) {
 function json(data, status, headers) {
   return new Response(JSON.stringify(data), { status: status || 200, headers });
 }
-const PROMPT_WORD_COUNT = 500;
 function shuffledPrompt() {
-  const words = [];
-  while (words.length < PROMPT_WORD_COUNT) {
-    const pool = WORD_BANK.slice();
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    words.push(...pool);
+  const pool = WORD_BANK.slice();
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  return words.slice(0, PROMPT_WORD_COUNT).join(" ");
+  return pool.slice(0, 58).join(" ");
 }
 // Common Turkish and English profanity/insult terms. Add or remove terms here as needed.
 const BLOCKED_NICKNAME_TERMS = [
@@ -110,7 +106,8 @@ async function handle(request, env) {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
   if (origin && !ALLOWED_ORIGINS.has(origin)) return json({ error: "Bu site bu API'yi kullanamaz." }, 403, corsHeaders);
-  if (url.pathname === "/api/health" && request.method === "GET") return json({ ok: true, service: "Velandris Klavye Arenası", version: 2 }, 200, corsHeaders);
+  if (url.pathname === "/api/health" && request.method === "GET") return json({ ok: true, service: "Velandris Klavye Arenası", version: 2, maintenance: MAINTENANCE_MODE }, 200, corsHeaders);
+  if (MAINTENANCE_MODE && url.pathname.startsWith("/api/")) return json({ error: "Çevrim içi sıralama gizlilik ve veri saklama incelemesi nedeniyle geçici olarak kapalı." }, 503, corsHeaders);
   if (!env.DB) return json({ error: "D1 veritabanı bağlantısı yapılandırılmamış." }, 503, corsHeaders);
 
   if (url.pathname === "/api/start" && request.method === "POST") {

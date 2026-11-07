@@ -1,0 +1,31 @@
+VELANDRIS LABS — 24 EKİM TASARIMINA GERİ DÖNÜŞ
+
+Bu paket, 24.10.2026 tarihinde saklanan tam proje sürümünü temel alır.
+24 Ekim'deki koyu lacivert / mavi tasarım ve sayfa yapısı geri yüklenmiştir.
+Daha sonra yaptığımız 60 saniyelik klavye testi korunmuştur; hem tarayıcı
+kodu hem de Cloudflare Worker 60 saniyeye göre eşleştirilmiştir.
+
+PAKET İÇERİĞİ
+- index.html, style.css, app.js, config.js
+- programlar.html
+- assets/mark.svg
+- worker/index.js, worker/schema.sql, worker/wrangler.toml.example
+- README-KURULUM.txt
+
+GITHUB'A GERİ YÜKLEME
+1. ZIP'i bilgisayarında çıkar.
+2. GitHub'da wveleno/Velandris-Labs deposunu aç.
+3. Add file > Upload files seç.
+4. ZIP'in içindeki tüm dosya ve klasörleri (klasörün kendisini değil)
+   deponun kök dizinine sürükle. style.css mutlaka index.html ile aynı yerde olmalı.
+5. Aynı isimli dosyaları bu pakettekilerle değiştir ve Commit changes yap.
+6. Yayın tamamlandıktan sonra siteyi Ctrl+F5 ile yenile.
+
+ÖNEMLİ
+- Bu paket 24 Ekim tasarımını geri getirir; 24 Ekim'den sonra eklenen bazı
+  HTML/JavaScript düzenlemeleri bu sürümde bulunmayabilir.
+- Klavye testi 60 saniyedir. Worker kodu da 60 saniyeye ayarlanmıştır.
+- Worker/index.js dosyasını GitHub'a yüklemek Cloudflare Worker'ı otomatik
+  güncellemez. Gerekirse Cloudflare panelinde ayrıca Deploy et.
+- Mevcut D1 verilerini korumak için schema.sql'i yeniden çalıştırma.
+- GitHub Pages özel alan adı ayarını (varsa) silme.

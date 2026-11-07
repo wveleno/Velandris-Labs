@@ -1,2 +1,2 @@
-// Velandris Labs ortak liderlik tablosu API adresi.
-window.VELANDRIS_LEADERBOARD_API = 'https://velandris-leaderboard-api.furkanaybakan11.workers.dev';
+// Gizlilik incelemesi tamamlanana kadar çevrim içi skor API'si kapalı.
+window.VELANDRIS_LEADERBOARD_API = '';

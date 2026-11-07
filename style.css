@@ -196,3 +196,33 @@
   .typing-feature-key-row i{min-height:37px;font-size:11px}.typing-feature-key-row .typing-feature-space{min-height:23px}
 }
 
+
+
+/* KVKK / iletişim ve yayın öncesi gizlilik alanları */
+.collaboration-paused { display:grid; justify-items:start; gap:12px; max-width:850px; margin:0 auto; padding:clamp(22px,3vw,34px); border:1px solid #29485e; border-radius:18px; background:linear-gradient(145deg,#0e2030,#091521); }
+.collaboration-paused-mark { width:44px; height:44px; display:grid; place-items:center; border:1px solid #2d6b83; border-radius:13px; background:#0d2d3a; color:var(--cyan); font-size:20px; }
+.collaboration-paused h3 { margin:0; font-size:19px; }
+.collaboration-paused p { max-width:760px; margin:0; color:var(--muted); font-size:12px; line-height:1.85; }
+.collaboration-privacy-links { display:flex; gap:9px; flex-wrap:wrap; padding-top:5px; }
+.collaboration-privacy-links a,.footer-legal a { color:#79cce1; font-size:10px; text-decoration:none; }
+.collaboration-privacy-links a:hover,.footer-legal a:hover { color:var(--cyan); text-decoration:underline; }
+.footer-legal { display:flex; align-items:center; gap:15px; flex-wrap:wrap; }
+.leaderboard-paused { border-color:#29485e; background:linear-gradient(145deg,#0d1d2b,#091521); }
+.leaderboard-paused .leaderboard-status { margin:0; color:#9bb2c5; font-size:11px; line-height:1.8; }
+.legal-page { min-height:65vh; padding:38px 0 80px; }
+.legal-hero { padding:35px 0 24px; border-bottom:1px solid #1d3447; }
+.legal-hero h1 { margin:12px 0 10px; max-width:900px; font-size:clamp(30px,5vw,48px); line-height:1.1; letter-spacing:-1.5px; }
+.legal-hero p { max-width:800px; color:var(--muted); font-size:12px; line-height:1.8; }
+.legal-content { max-width:900px; margin:0 auto; padding:28px 0; }
+.legal-content section { padding:18px 0; border-bottom:1px solid #1a3043; }
+.legal-content h2 { margin:0 0 10px; font-size:18px; color:#e7f5ff; }
+.legal-content h3 { margin:16px 0 7px; font-size:14px; color:#c8e7f5; }
+.legal-content p,.legal-content li { color:#9db2c5; font-size:12px; line-height:1.9; }
+.legal-content ul { margin:8px 0 0; padding-left:20px; }
+.legal-content a { color:#79cce1; text-decoration:none; }
+.legal-content a:hover { text-decoration:underline; }
+.legal-notice { margin:22px 0; padding:15px 17px; border:1px solid #8b6937; border-radius:13px; background:#241d13; color:#f0d6a5; font-size:11px; line-height:1.8; }
+.legal-notice strong { color:#ffd58b; }
+.legal-meta { color:#718ca2!important; font-size:10px!important; }
+.legal-footer-links { display:flex; gap:15px; flex-wrap:wrap; margin-top:10px; }
+@media(max-width:720px){.legal-page{padding:20px 0 55px}.legal-hero{padding:26px 0 19px}.legal-content section{padding:14px 0}.footer-legal{order:4;width:100%;padding-top:5px}.collaboration-paused{padding:19px}}
