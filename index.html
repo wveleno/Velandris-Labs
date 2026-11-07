@@ -224,16 +224,56 @@
         <div>
           <div class="eyebrow">İŞ BİRLİĞİ & İLETİŞİM</div>
           <h2>Birlikte <span>bir şeyler üretelim.</span></h2>
-          <p>Reklam, sponsorluk, yazılım projeleri veya yeni fikirler için e-posta yoluyla ulaşabilirsin.</p>
+          <p>Reklam, sponsorluk, yazılım projeleri veya yeni fikirlerin için bize mesaj bırak.</p>
         </div>
         <span class="section-count">VELANDRIS / İŞ BİRLİĞİ</span>
       </div>
-      <div class="collaboration-shell collaboration-paused">
-        <div class="collaboration-paused-mark" aria-hidden="true">✉</div>
-        <h3>İletişim formu şimdilik kapalı.</h3>
-        <p>Veri işleme ve gizlilik ayarlarımızı tamamlıyoruz. Şimdilik doğrudan e-posta gönderebilirsin. E-posta gönderdiğinde mesajın ve eklerin e-posta hizmet sağlayıcısı üzerinden işlenir; lütfen parola, kimlik numarası veya özel nitelikli kişisel veri gönderme.</p>
-        <a class="button primary" href="mailto:velandrislabs@gmail.com?subject=Velandris%20Labs%20-%20Is%20birligi">E-posta ile ulaş <span>↗</span></a>
-        <p class="collaboration-privacy-links"><a href="kvkk.html">KVKK Aydınlatma Metni</a><span>·</span><a href="cerezler.html">Çerez Politikası</a></p>
+      <div class="collaboration-shell">
+        <form id="collaborationForm" class="collaboration-form" autocomplete="on">
+          <div class="collaboration-fields">
+            <label class="collaboration-field field-wide" for="collabType">
+              <span>Talep türü <b>*</b></span>
+              <select id="collabType" name="request_type" required>
+                <option value="" selected disabled>Bir seçenek belirle</option>
+                <option>Reklam ve sponsorluk</option>
+                <option>İş birliği teklifi</option>
+                <option>Yazılım projesi</option>
+                <option>Program önerisi</option>
+                <option>Geri bildirim</option>
+                <option>Diğer</option>
+              </select>
+            </label>
+            <label class="collaboration-field" for="collabName">
+              <span>Adınız <b>*</b></span>
+              <input id="collabName" type="text" name="name" autocomplete="given-name" maxlength="100" placeholder="Adınız" required>
+            </label>
+            <label class="collaboration-field" for="collabSurname">
+              <span>Soyadınız</span>
+              <input id="collabSurname" type="text" name="surname" autocomplete="family-name" maxlength="100" placeholder="Soyadınız">
+            </label>
+            <label class="collaboration-field field-wide" for="collabEmail">
+              <span>E-posta adresiniz <b>*</b></span>
+              <input id="collabEmail" type="email" name="email" autocomplete="email" maxlength="254" placeholder="ornek@firma.com" required>
+            </label>
+            <label class="collaboration-field" for="collabPhone">
+              <span>Telefon <small>(isteğe bağlı)</small></span>
+              <input id="collabPhone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="+90 5XX XXX XX XX">
+            </label>
+            <label class="collaboration-field" for="collabCompany">
+              <span>Şirket / Marka <small>(isteğe bağlı)</small></span>
+              <input id="collabCompany" type="text" name="company" autocomplete="organization" maxlength="150" placeholder="Şirket veya marka adı">
+            </label>
+            <label class="collaboration-field field-wide" for="collabMessage">
+              <span>Teklifiniz veya projeniz hakkında <b>*</b></span>
+              <textarea id="collabMessage" name="message" rows="5" maxlength="2500" placeholder="Kısaca fikrinizden, projenizden veya iş birliği teklifinizden bahsedin..." required></textarea>
+            </label>
+          </div>
+          <p class="collaboration-mailto-note">
+            Gönder'e bastığında cihazındaki e-posta uygulaması açılır ve mesajın taslak olarak hazırlanır. Bilgilerin bu web sayfasından bir forma veya üçüncü taraf form sunucusuna gönderilmez; e-postayı kontrol edip kendin gönderirsin. E-posta sağlayıcının gizlilik koşulları geçerlidir. Lütfen parola, kimlik numarası veya özel nitelikli kişisel veri gönderme. <a href="kvkk.html">KVKK Aydınlatma Metni</a>.
+          </p>
+          <button class="button primary collaboration-submit" type="submit"><span aria-hidden="true">➤</span> E-posta taslağı oluştur</button>
+          <p id="collaborationStatus" class="collaboration-status" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </section>
   </main>
@@ -242,6 +282,39 @@
 
   <div class="modal-backdrop" id="appModal" hidden><section class="workspace" role="dialog" aria-modal="true" aria-labelledby="workspaceTitle"><div class="workspace-head"><div class="workspace-title"><img src="assets/mark.svg" alt="" width="36" height="36"><div><div class="eyebrow">VELANDRIS LABS / UYGULAMA</div><h2 id="workspaceTitle">Uygulama</h2></div></div><button class="close" id="closeModal" aria-label="Kapat">×</button></div><p class="workspace-desc" id="workspaceDesc"></p><div class="workspace-body" id="workspaceBody"></div><div class="workspace-foot"><span id="workspaceStatus" role="status" aria-live="polite">Hazır.</span><button class="button secondary small" id="clearWorkspace">Alanları temizle</button></div></section></div>
 
+
+
+  <script id="collaboration-mailto-handler">
+    (function () {
+      const form = document.getElementById('collaborationForm');
+      const status = document.getElementById('collaborationStatus');
+      if (!form || !status) return;
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+
+        const data = new FormData(form);
+        const fields = [
+          ['Talep türü', data.get('request_type')],
+          ['Ad', data.get('name')],
+          ['Soyad', data.get('surname')],
+          ['E-posta', data.get('email')],
+          ['Telefon', data.get('phone')],
+          ['Şirket / Marka', data.get('company')],
+          ['Mesaj', data.get('message')]
+        ];
+        const body = fields
+          .filter(([, value]) => String(value || '').trim())
+          .map(([label, value]) => label + ': ' + String(value).trim())
+          .join('\n\n');
+        const subject = 'Velandris Labs - ' + String(data.get('request_type') || 'İletişim');
+        const mailto = 'mailto:velandrislabs@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        status.textContent = 'E-posta uygulaman açılmalı. Mesajı kontrol edip e-posta uygulamanda Gönder düğmesine bas.';
+        window.location.href = mailto;
+      });
+    })();
+  </script>
 
 </body>
 </html>

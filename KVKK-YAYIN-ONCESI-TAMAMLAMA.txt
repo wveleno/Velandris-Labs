@@ -2,7 +2,7 @@ VELANDRIS LABS — KVKK YAYIN ÖNCESİ TAMAMLAMA LİSTESİ
 Tarih: 07.11.2026
 
 BU PAKETTE YAPILANLAR
-- Web3Forms iletişim formu ve ön yüzdeki erişim anahtarı kaldırıldı. İletişim şimdilik kullanıcının kendi e-posta uygulaması üzerinden başlatılıyor.
+- İş birliği formunun görünümü ve alanları korundu. Form, Web3Forms veya başka bir sunucuya veri göndermez; kullanıcının e-posta uygulamasında taslak açar ve kullanıcı kendisi gönderir.
 - Cloudflare Web Analytics betiği ana sayfadan ve programlar sayfasından çıkarıldı.
 - Klavye testi 60 saniye olarak cihaz üzerinde çalışmaya devam ediyor; çevrim içi nickname/puan gönderimi arayüzden kapatıldı.
 - worker/index.js bakım moduna alındı; bu dosya Cloudflare Worker'a ayrıca Deploy edilmelidir.

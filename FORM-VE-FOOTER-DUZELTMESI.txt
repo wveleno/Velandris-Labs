@@ -1,0 +1,6 @@
+VELANDRIS LABS — FORM VE FOOTER DÜZELTMESİ
+
+- İş birliği formu tekrar görünür hâle getirildi; önceki alanlar ve görünüm korundu.
+- Form gönderimi Web3Forms kullanmaz. E-posta uygulamasında taslak açar; kullanıcı mesajı kontrol edip kendisi gönderir.
+- Footer içindeki KVKK ve Çerezler bağlantıları daha küçük, daha soluk ve altı çizgisiz hâle getirildi.
+- Çevrim içi skor paylaşımı bakım modu nedeniyle hâlâ kapalıdır.

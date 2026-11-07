@@ -8,7 +8,7 @@ DOSYALAR
 - worker/: Cloudflare Worker API kaynağı ve D1 şeması
 
 GİZLİLİK İÇİN BU SÜRÜMDEKİ DEĞİŞİKLİKLER
-- Web3Forms formu kapatıldı; erişim anahtarı kaldırıldı. İletişim bağlantısı kullanıcının kendi e-posta uygulamasını açar.
+- İş birliği formunun tasarımı ve alanları korundu. Gönder düğmesi Web3Forms kullanmaz; kullanıcının e-posta uygulamasında taslak açar. Kullanıcı e-postayı kendisi gönderir.
 - Cloudflare Web Analytics script'i kaldırıldı.
 - 60 saniyelik klavye testi yerel olarak çalışır. Çevrim içi liderlik tablosu arayüzü duraklatıldı.
 - worker/index.js bakım modundadır; Cloudflare Worker'a ayrıca Deploy edilmelidir.
