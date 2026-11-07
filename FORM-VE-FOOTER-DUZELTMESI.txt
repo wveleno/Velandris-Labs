@@ -1,6 +1,0 @@
-VELANDRIS LABS — SON GÖRÜNÜM NOTLARI
-
-- İş birliği formunun kısa e-posta taslağı açıklaması ve alanları korunmuştur.
-- Footer'daki yasal bağlantı sadeleştirilerek tek küçük “Gizlilik” bağlantısı bırakılmıştır.
-- Çerez bilgisi, gizlilik sayfasındaki kısa bölüme taşınmıştır; eski cerezler.html adresi bu bölüme yönlendirir.
-- Diğer sayfa tasarımı, araçlar ve 60 saniyelik yerel klavye testi korunmuştur.

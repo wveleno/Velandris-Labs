@@ -1,10 +1,14 @@
 (() => {
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+  const LEADERBOARD_API_BASE = String(window.VELANDRIS_LEADERBOARD_API || '').trim().replace(/\/+$/, '');
   const modal = $('#appModal'), title = $('#workspaceTitle'), desc = $('#workspaceDesc'), body = $('#workspaceBody'), status = $('#workspaceStatus');
   let currentApp = null;
   let typingTimer = null, typingStartAt = 0, typingActive = false, typingElapsedMs = 0, typingCurrentPrompt = '', typingPromptUsed = false;
-  const typingDurationMs = 60000;
+  let typingServerSessionId = null, typingFinished = false, leaderboardRefreshTimer = null, leaderboardLoadInFlight = false;
+  const typingNicknameKey = 'velandris-typing-nickname-v1';
+  const typingDurationMs = 60_000;
+  const typingPromptWordCount = 500;
   // Her denemede kelime havuzundan yeni bir sıralama üretilir; sabit paragraf listesi yoktur.
   const typingWordBank = (`bugün yarın zaman dünya insan hayat düşünce fikir çözüm çalışma emek başarı öğrenmek geliştirmek tasarım yazılım teknoloji üretim paylaşmak keşfetmek denemek düzenlemek oluşturmak başlamak bitirmek hızlı doğru dikkat sakin güçlü kolay küçük büyük farklı yeni güzel gerçek önemli değer fayda sonuç hedef plan yöntem adım süreç alışkanlık ihtiyaç amaç araç uygulama ekran klavye pencere dosya klasör bilgi veri metin içerik görsel renk bağlantı sayfa web tarayıcı cihaz bilgisayar telefon öğrenci öğretmen ekip kullanıcı proje sistem hizmet deneyim kalite güvenlik gizlilik performans hız doğruluk denge odak enerji düzen akış liste tablo satır sütun kayıt alan ayar seçenek kontrol test örnek belge rapor kaynak sonuç başarı ilerleme değişim gelişim fırsat merak üretici geliştirici yazar okur oyuncu taslak fikirler notlar görev iş süreç planlama paylaşım erişim yöntem sonuç odaklanmak düşünmek anlamak anlatmak yazmak okumak çizmek görmek duymak seçmek bulmak çözmek ölçmek hesaplamak karşılaştırmak azaltmak artırmak sadeleştirmek iyileştirmek hızlandırmak korumak kullanmak denetlemek tamamlamak öğrenilen işe yarar verimli tutarlı anlaşılır güvenilir erişilebilir yaratıcı pratik esnek modern sade temiz parlak kararlı dikkatli hafif akıllı çevik düzenli faydalı etkili bağlantılı yerel hızlıca güvenle adımları ayrıntı örnekler içerikler dosyalar görseller sayılar harfler karakterler kelimeler cümleler araçlar fikirler insanlar işler üretim merak beceri deneyim gelişme başarı hedefler`.trim()).split(/\s+/);
   function normalizeTypingWords(text){
@@ -55,7 +59,8 @@
     const points=correct;
     const accuracy=completed.length?Math.round(correct/completed.length*100):100;
     const speed=elapsed>0?Math.round(correct*60000/elapsed):0;
-    $('#typingTime').textContent=Math.ceil(Math.max(0,typingDurationMs-elapsed)/1000)+'s';
+    const remaining=Math.ceil(Math.max(0,typingDurationMs-elapsed)/1000);
+    $('#typingTime').textContent=`${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`;
     $('#typingPoints').textContent=String(points);
     const speedEl=$('#typingSpeed');if(speedEl)speedEl.textContent=String(speed);
     $('#typingAccuracy').textContent=accuracy+'%';
@@ -63,12 +68,13 @@
   }
   function resetTypingTest(newPrompt=false){
     if(typingTimer){clearInterval(typingTimer);typingTimer=null;}
-    typingActive=false;typingElapsedMs=0;
+    typingActive=false;typingElapsedMs=0;typingServerSessionId=null;typingFinished=false;
     if(newPrompt||!typingCurrentPrompt)chooseTypingPrompt();
     const inputEl=$('#typingInput');if(inputEl){inputEl.value='';inputEl.disabled=true;}
     if($('#typingHelp'))$('#typingHelp').textContent='Her doğru tamamlanan kelime 1 puan kazandırır. Yanlış kelimeler puan kazandırmaz.';
     if($('#typingResult'))$('#typingResult').textContent='Başlamak için testi başlat.';
     const start=$('[data-action="startTypingTest"]');if(start){start.textContent='60 saniyelik testi başlat';start.disabled=false;}
+    const share=$('[data-action="submitTypingScore"]');if(share)share.disabled=true;
     updateTypingStats();
   }
   function finishTypingTest(){
@@ -82,22 +88,116 @@
     const progress=typingProgress(inputEl?inputEl.value:'');
     const points=progress.correct;
     const acc=$('#typingAccuracy').textContent;
-    $('#typingResult').textContent=`Test bitti. Puanın: ${points}. Kelime doğruluğu: ${acc}.`;
+    typingFinished=true;
+    const speed=Math.round(points*60_000/Math.max(1,typingElapsedMs));
+    $('#typingResult').textContent=`Test tamamlandı · 1:00. Puanın: ${points} · Hızın: ${speed} kelime/dk · Doğruluk: ${acc}.`;
     $('#typingHelp').textContent=`Büyük/küçük harf ve noktalama dikkate alınmadı. Tamamladığın kelime: ${progress.completed.length}; doğru kelime: ${progress.correct}.`;
+    const share=$('[data-action="submitTypingScore"]');if(share)share.disabled=!(LEADERBOARD_API_BASE && typingServerSessionId);
+    if(!LEADERBOARD_API_BASE){
+      const msg=$('#leaderboardStatus');if(msg)msg.textContent='Ortak sıralama bağlantısı yapılandırılmamış. Test yerel olarak çalışıyor.';
+    } else if(!typingServerSessionId){
+      const msg=$('#leaderboardStatus');if(msg)msg.textContent='Bu deneme çevrim içi oturumla başlamadı; skoru tabloya gönderemezsin. Yeni test başlat.';
+    }
     statusMsg('Klavye testi tamamlandı.');
     const start=$('[data-action="startTypingTest"]');if(start)start.textContent='Tekrar dene';
   }
   async function beginTypingTest(){
     if(typingTimer){clearInterval(typingTimer);typingTimer=null;}
     const inputEl=$('#typingInput');if(!inputEl)return;
-    if(typingPromptUsed)chooseTypingPrompt();
-    typingPromptUsed=true;
+    typingServerSessionId=null;typingFinished=false;
+    const start=$('[data-action="startTypingTest"]');
+    if(LEADERBOARD_API_BASE){
+      if(start){start.disabled=true;start.textContent='Metin hazırlanıyor…';}
+      try{
+        const session=await leaderboardRequest('/api/start',{method:'POST',body:'{}'});
+        if(currentApp!=='typingtest'||modal.hidden)return;
+        if(!session||!session.sessionId||!session.prompt)throw new Error('Sunucudan test metni alınamadı.');
+        if(Number(session.durationMs)!==typingDurationMs||normalizeTypingWords(session.prompt).length<typingPromptWordCount)throw new Error('Sunucu henüz 60 saniyelik test sürümüne güncellenmemiş.');
+        typingServerSessionId=session.sessionId;typingCurrentPrompt=session.prompt;
+        const root=$('#typingPrompt');if(root)root.textContent=typingCurrentPrompt;
+        const lm=$('#leaderboardStatus');if(lm){lm.textContent='Çevrim içi test hazır. Sonuçlar ortak sıralamaya gönderilebilir.';lm.classList.remove('is-error');}
+      }catch(err){
+        if(currentApp!=='typingtest'||modal.hidden)return;
+        chooseTypingPrompt();
+        const lm=$('#leaderboardStatus');if(lm){lm.textContent=`${err.message||'Liderlik tablosuna bağlanılamadı.'} Test yerel başlayacak; bu deneme sıralamaya gönderilemez.`;lm.classList.add('is-error');}
+      }finally{if(start)start.disabled=false;}
+    } else if(typingPromptUsed){chooseTypingPrompt();}
     if(currentApp!=='typingtest'||modal.hidden)return;
+    typingPromptUsed=true;
     inputEl.value='';inputEl.disabled=false;typingActive=true;typingElapsedMs=0;typingStartAt=Date.now();
     if($('#typingResult'))$('#typingResult').textContent='Test başladı. Kelimeleri sırayla yaz.';
     if($('#typingHelp'))$('#typingHelp').textContent='Kelimeleri sırayla yaz. Doğru kelimeler yeşil, hatalı kelimeler kırmızı görünür.';
-    statusMsg('Klavye testi başladı.');updateTypingStats();inputEl.focus();
+    const share=$('[data-action="submitTypingScore"]');if(share)share.disabled=true;
+    statusMsg(typingServerSessionId?'Çevrim içi klavye testi başladı.':'Klavye testi başladı.');updateTypingStats();inputEl.focus();
     typingTimer=setInterval(()=>{typingElapsedMs=Date.now()-typingStartAt;updateTypingStats();if(typingElapsedMs>=typingDurationMs)finishTypingTest();},100);
+  }
+  async function leaderboardRequest(path, options={}){
+    if(!LEADERBOARD_API_BASE)throw new Error('Liderlik tablosu API adresi ayarlanmamış.');
+    const headers={...(options.method==='POST'?{'Content-Type':'application/json'}:{}),...(options.headers||{})};
+    const response=await fetch(`${LEADERBOARD_API_BASE}${path}`,{...options,headers,cache:'no-store'});
+    let data={};try{data=await response.json();}catch{}
+    if(!response.ok)throw new Error(data.error||`Sunucu hatası (${response.status}).`);
+    return data;
+  }
+  function setLeaderboardStatus(message,isError=false){
+    const el=$('#leaderboardStatus');if(!el)return;
+    el.textContent=message;el.classList.toggle('is-error',Boolean(isError));
+  }
+  function renderLeaderboardRows(rows){
+    const root=$('#leaderboardRows');if(!root)return;
+    root.replaceChildren();
+    if(!Array.isArray(rows)||rows.length===0){
+      const empty=document.createElement('div');empty.className='leaderboard-empty';
+      empty.textContent=LEADERBOARD_API_BASE?'Henüz skor yok. İlk sonucu sen gönder!':'Ortak tablo için sunucu bağlantısı gerekiyor.';
+      root.append(empty);return;
+    }
+    rows.forEach((row,index)=>{
+      const item=document.createElement('article');item.className=`leaderboard-row${index===0?' leaderboard-first':''}`;
+      const rank=document.createElement('span');rank.className='leaderboard-rank';rank.textContent=String(index+1).padStart(2,'0');
+      const name=document.createElement('div');name.className='leaderboard-player';
+      const strong=document.createElement('strong');strong.textContent=row.nickname;
+      const small=document.createElement('small');small.textContent=`Doğruluk %${Math.round(Number(row.accuracy)||0)} · ${Number(row.correctWords)||0} doğru kelime`;
+      name.append(strong,small);
+      const pointValue=Number(row.points??row.correctWords??0)||0;
+      const points=document.createElement('strong');points.className='leaderboard-speed';points.textContent=`${pointValue} puan`;
+      item.append(rank,name,points);root.append(item);
+    });
+  }
+  async function loadLeaderboard(silent=false){
+    if(leaderboardLoadInFlight)return;
+    const period=$('#leaderboardPeriod')?.value==='alltime'?'alltime':'weekly';
+    if(!LEADERBOARD_API_BASE){setLeaderboardStatus('Cloudflare Worker bağlantısı yapılandırılmamış.');renderLeaderboardRows([]);return;}
+    leaderboardLoadInFlight=true;
+    if(!silent)setLeaderboardStatus('Sıralama yükleniyor…');
+    try{
+      const data=await leaderboardRequest(`/api/leaderboard?period=${period}`);
+      renderLeaderboardRows(data.entries||[]);
+      const updated=$('#leaderboardUpdated');if(updated)updated.textContent='Son kontrol: '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      setLeaderboardStatus('Ortak tablo açık · yaklaşık 15 saniyede bir yenilenir.');
+    }catch(err){setLeaderboardStatus(`Liderlik tablosu yüklenemedi: ${err.message}`,true);renderLeaderboardRows([]);}
+    finally{leaderboardLoadInFlight=false;}
+  }
+  async function submitTypingScore(){
+    if(!typingFinished){setLeaderboardStatus('Önce 60 saniyelik testi tamamla.',true);return;}
+    if(!LEADERBOARD_API_BASE||!typingServerSessionId){setLeaderboardStatus('Bu test çevrim içi oturumla başlamadı. Bağlantıyı kontrol edip yeni test başlat.',true);return;}
+    const nickEl=$('#leaderboardNickname');
+    const nickname=String(nickEl?.value||'').trim().replace(/\s+/g,' ');
+    if(nickname.length<3||nickname.length>18||!/[\p{L}\p{N}]/u.test(nickname)||/[^\p{L}\p{N} _.-]/u.test(nickname)){
+      setLeaderboardStatus('3–18 karakterlik bir takma ad gir. Harf, sayı, boşluk, nokta, tire ve alt çizgi kullanabilirsin.',true);nickEl?.focus();return;
+    }
+    try{localStorage.setItem(typingNicknameKey,nickname);}catch{}
+    const button=$('[data-action="submitTypingScore"]');if(button){button.disabled=true;button.textContent='Gönderiliyor…';}
+    setLeaderboardStatus('Skor doğrulanıyor ve ortak tabloya gönderiliyor…');
+    try{
+      const data=await leaderboardRequest('/api/submit',{method:'POST',body:JSON.stringify({sessionId:typingServerSessionId,nickname,typedText:$('#typingInput')?.value||''})});
+      typingServerSessionId=null;
+      const submittedPoints=Number(data.points??data.correctWords??0)||0;
+      const submittedSpeed=Math.round(submittedPoints*60_000/Math.max(1,typingElapsedMs));
+      $('#typingResult').textContent=`Skor gönderildi! ${data.nickname}: ${submittedPoints} puan · ${submittedSpeed} kelime/dk · doğruluk %${data.accuracy}.`;
+      setLeaderboardStatus('Skor herkesin görebildiği ortak tabloya eklendi.');
+      await loadLeaderboard(true);
+    }catch(err){setLeaderboardStatus(`Skor gönderilemedi: ${err.message}`,true);}
+    finally{if(button){button.disabled=!typingServerSessionId;button.textContent='Skoru paylaş';}}
   }
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const btn = (label, action, cls='secondary') => `<button type="button" class="button ${cls} small" data-action="${action}">${label}</button>`;
@@ -121,7 +221,7 @@
     currentApp=id; title.textContent=app.title; desc.textContent=app.desc; body.innerHTML=app.render(); statusMsg('Hazır.'); modal.hidden=false; document.body.classList.add('modal-open'); $('#closeModal').focus();
     if(app.init) app.init();
   }
-  function closeModal() { if(typingTimer){clearInterval(typingTimer);typingTimer=null;} typingActive=false; modal.hidden=true; document.body.classList.remove('modal-open'); body.innerHTML=''; currentApp=null; }
+  function closeModal() { if(typingTimer){clearInterval(typingTimer);typingTimer=null;} if(leaderboardRefreshTimer){clearInterval(leaderboardRefreshTimer);leaderboardRefreshTimer=null;} typingActive=false; modal.hidden=true; document.body.classList.remove('modal-open'); body.innerHTML=''; currentApp=null; }
   $('#closeModal').addEventListener('click', closeModal);
   modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.hidden) closeModal(); });
@@ -203,7 +303,7 @@
     urltools:{title:'URL İnceleyici',desc:'Bağlantıyı parçalara ayır, sorgu parametrelerini incele veya bileşenleri kodla/çöz.',render:()=>`${field('URL','urlInput',input('urlInput','https://example.com/search?q=velandris&page=1','url'))}${actionBar(btn('URL incele','inspectUrl','primary')+btn('URL kopyala','copyUrl'))}<div class="result-box" id="urlResult">URL bilgileri burada.</div>${field('Kodlanacak veya çözülecek metin','urlText',textarea('urlText','Bir metin, parametre veya URL parçası'))}${actionBar(btn('URL kodla','encodeUrl')+btn('URL çöz','decodeUrl')+btn('Sonucu kopyala','copyUrlText'))}<div class="result-box" id="urlTextResult">Dönüşüm sonucu burada.</div>`},
     datetime:{title:'Tarih ve Zaman Aracı',desc:'Unix timestamp ve tarih arasında dönüşüm yap veya iki tarih arasındaki süreyi hesapla.',render:()=>`${field('Unix timestamp (saniye veya milisaniye)','timestampInput',input('timestampInput',String(Math.floor(Date.now()/1000))))}${actionBar(btn('Timestamp → tarih','tsToDate','primary')+btn('Şu anı al','nowTimestamp'))}${result('timestampResult')}<div class="field-grid">${field('Başlangıç tarihi','dateStart',input('dateStart',new Date().toISOString().slice(0,10),'date'))}${field('Bitiş tarihi','dateEnd',input('dateEnd',new Date().toISOString().slice(0,10),'date'))}</div>${actionBar(btn('Tarih farkını hesapla','dateDiff')+btn('Tarihi timestamp yap','dateToTs'))}${result('dateResult')}`},
     regex:{title:'Regex Test Alanı',desc:'Düzenli ifadeyi test metninde çalıştır. Regex büyük metinlerde veya riskli desenlerde yavaşlayabileceği için yalnızca güvendiğin desenleri kullan.',render:()=>`<div class="field-grid">${field('Düzenli ifade','regexPattern',input('regexPattern','\\b(velandris)\\b'))}${field('Bayraklar','regexFlags',input('regexFlags','gi'))}</div>${field('Test metni','regexText',textarea('regexText','Metni buraya yaz','Velandris Labs ile işlerini hızlandır. Velandris araçlarını keşfet.'))}${actionBar(btn('Regex test et','runRegex','primary')+btn('Eşleşmeleri kopyala','copyMatches'))}<div class="output-row"><strong>Eşleşmeler</strong><span id="regexCount" class="help-text">Henüz test edilmedi</span></div><div class="match-list" id="regexMatches"></div>${result('regexResult')}`},
-    typingtest:{title:'Klavye Hız Testi',desc:'60 saniyelik klavye hız testi. Bu sürümde test cihazında çalışır; takma ad veya skor çevrim içi tabloya gönderilmez.',render:()=>`<div class="typing-test-shell"><div class="typing-stats"><div><span>KALAN SÜRE</span><strong id="typingTime">60s</strong></div><div><span>PUAN</span><strong><b id="typingPoints">0</b> <small>puan</small><span class="typing-speed-inline"> · <b id="typingSpeed">0</b> kelime/dk</span></strong></div><div><span>KELİME DOĞRULUĞU</span><strong id="typingAccuracy">100%</strong></div></div><p class="typing-instruction">Her doğru tamamlanan kelime 1 puan kazandırır. Test metni bu cihazda oluşturulur.</p><div class="typing-prompt" id="typingPrompt" aria-label="Yazılacak metin"></div>${field('Yazma alanı','typingInput',`<textarea id="typingInput" placeholder="Testi başlatınca buraya yazmaya başla…" disabled autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>`)}<p class="help-text" id="typingHelp">Her doğru tamamlanan kelime 1 puan kazandırır. Yanlış kelimeler puan kazandırmaz.</p>${actionBar(btn('60 saniyelik testi başlat','startTypingTest','primary')+btn('Yeni metin','newTypingPrompt'))}${result('typingResult')}<section class="leaderboard-panel leaderboard-paused" aria-labelledby="leaderboardTitle"><div class="leaderboard-heading"><div><span class="app-category">VELANDRIS LABS / GİZLİLİK</span><h3 id="leaderboardTitle">Çevrim içi sıralama duraklatıldı</h3></div></div><p class="leaderboard-status">60 saniyelik test çalışmaya devam ediyor. Gizlilik ve veri saklama kontrolleri tamamlanana kadar takma ad ve skor paylaşımı kapalıdır.</p></section></div>`,init:()=>{resetTypingTest(true);$('#typingInput').addEventListener('input',updateTypingStats);}},
+    typingtest:{title:'Klavye Hız Testi',desc:'60 saniyede doğru tamamladığın kelimeleri say. İstersen skorunu herkesin görebileceği ortak liderlik tablosuna gönder.',render:()=>`<div class="typing-test-shell"><div class="typing-stats" aria-label="Anlık test sonuçları"><div class="typing-stat typing-stat-time"><span>KALAN SÜRE</span><strong id="typingTime" role="timer" aria-label="Kalan süre">01:00</strong></div><div class="typing-stat"><span>PUAN</span><strong><b id="typingPoints">0</b><small>puan</small></strong></div><div class="typing-stat"><span>HIZ</span><strong><b id="typingSpeed">0</b><small>kelime/dk</small></strong></div><div class="typing-stat"><span>DOĞRULUK</span><strong id="typingAccuracy">100%</strong></div></div><p class="typing-instruction">Her denemede sunucudan yeni bir metin gelir. Büyük/küçük harf ve noktalama sonucu etkilemez.</p><div class="typing-prompt" id="typingPrompt" aria-label="Yazılacak metin"></div>${field('Yazma alanı','typingInput',`<textarea id="typingInput" placeholder="Testi başlatınca buraya yazmaya başla…" maxlength="5000" aria-describedby="typingHelp" disabled autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>`)}<p class="help-text" id="typingHelp">Her doğru tamamlanan kelime 1 puan kazandırır. Yanlış kelimeler puan kazandırmaz.</p>${actionBar(btn('60 saniyelik testi başlat','startTypingTest','primary')+btn('Yeni metin','newTypingPrompt'))}${result('typingResult')}<section class="leaderboard-panel" aria-labelledby="leaderboardTitle"><div class="leaderboard-heading"><div><span class="app-category">VELANDRIS LABS / SIRALAMA</span><h3 id="leaderboardTitle">Klavye Arenası</h3><p>En iyi sonuçlar burada herkese aynı şekilde görünür.</p></div><button type="button" class="leaderboard-refresh" data-action="loadLeaderboard" aria-label="Sıralamayı yenile">↻ Yenile</button></div><div class="leaderboard-controls">${field('Takma ad','leaderboardNickname',input('leaderboardNickname','','text','maxlength="18" autocomplete="nickname" placeholder="Örn. velox"'))}<div class="leaderboard-period-wrap"><label for="leaderboardPeriod">Sıralama</label><select id="leaderboardPeriod"><option value="weekly">Bu hafta</option><option value="alltime">Tüm zamanlar</option></select></div></div><div class="leaderboard-status" id="leaderboardStatus" role="status" aria-live="polite">Ortak sıralama bağlantısı kontrol ediliyor…</div><div id="leaderboardRows" class="leaderboard-rows"><div class="leaderboard-empty">Sıralama yükleniyor…</div></div><div class="leaderboard-footer"><span id="leaderboardUpdated">Henüz yenilenmedi</span><button type="button" class="button primary small" data-action="submitTypingScore" disabled>Skoru paylaş</button></div><p class="leaderboard-disclaimer">Gerçek adını veya iletişim bilgilerini kullanma. Takma adın ve skorun herkese açık görünür; uygunsuz takma adlar engellenir.</p></section></div>`,init:()=>{resetTypingTest(true);const name=$('#leaderboardNickname');try{name.value=localStorage.getItem(typingNicknameKey)||'';}catch{}$('#typingInput').addEventListener('input',updateTypingStats);$('#leaderboardPeriod').addEventListener('change',()=>loadLeaderboard());if(name)name.addEventListener('change',()=>{try{localStorage.setItem(typingNicknameKey,name.value.trim());}catch{}});loadLeaderboard();if(leaderboardRefreshTimer)clearInterval(leaderboardRefreshTimer);leaderboardRefreshTimer=setInterval(()=>loadLeaderboard(true),15000);}},
     brief:{title:'Plan ve Doküman Asistanı',desc:'İş tanımı, toplantı notu, hata raporu veya README için düzenli bir taslak oluştur.',render:()=>`${field('Taslak türü','briefType',`<select id="briefType"><option value="task">Görev tanımı</option><option value="bug">Hata raporu</option><option value="meeting">Toplantı özeti</option><option value="readme">README</option><option value="release">Sürüm notları</option><option value="content">İçerik planı</option></select>`)}${field('Başlık / proje adı','briefTitle',input('briefTitle','','text','placeholder="Örn. Kullanıcı panelini yenile"'))}${field('Ham notların veya gereksinimlerin','briefNotes',textarea('briefNotes','Kısa notlarını, hedefi, sorunu veya gereksinimleri yaz.'))}${actionBar(btn('Taslak oluştur','makeBrief','primary')+btn('Kopyala','copyBrief')+btn('Markdown indir','downloadBrief'))}${result('briefResult')}`}
   };
   function divFieldColor(){return field('Ana renk','mainColor',`<div style="display:flex;gap:10px;align-items:center"><input id="mainColor" type="color" value="#54e3ff"><code id="mainHex">#54E3FF</code></div>`)}
@@ -221,6 +321,8 @@
     tsToDate:()=>{const n=Number($('#timestampInput').value);if(!Number.isFinite(n)){statusMsg('Geçerli bir timestamp gir.');return;}const ms=Math.abs(n)<1e12?n*1000:n,d=new Date(ms);$('#timestampResult').textContent=Number.isNaN(d.getTime())?'Bu değer geçerli tarih aralığında değil.':`Yerel: ${d.toLocaleString('tr-TR')}\nUTC: ${d.toISOString()}\nMilisaniye: ${d.getTime()}\nSaniye: ${Math.floor(d.getTime()/1000)}`;},nowTimestamp:()=>{$('#timestampInput').value=String(Math.floor(Date.now()/1000));actions.tsToDate();},dateDiff:()=>{const a=new Date($('#dateStart').value+'T00:00:00'),b=new Date($('#dateEnd').value+'T00:00:00');if(Number.isNaN(a.getTime())||Number.isNaN(b.getTime())){statusMsg('İki tarihi de seç.');return;}const days=Math.round((b-a)/86400000);$('#dateResult').textContent=`Fark: ${Math.abs(days)} gün\nYön: ${days<0?'bitiş başlangıçtan önce':days>0?'bitiş başlangıçtan sonra':'aynı gün'}\nHafta karşılığı: ${(Math.abs(days)/7).toFixed(2)}`;},dateToTs:()=>{const d=new Date($('#dateStart').value+'T00:00:00');$('#dateResult').textContent=Number.isNaN(d.getTime())?'Geçerli tarih seç.':`Yerel tarih başlangıcı: ${d.toLocaleString('tr-TR')}\nTimestamp (saniye): ${Math.floor(d.getTime()/1000)}\nTimestamp (ms): ${d.getTime()}`;},
     runRegex:()=>{const pattern=$('#regexPattern').value,flags=$('#regexFlags').value,text=$('#regexText').value,out=$('#regexMatches');out.innerHTML='';try{if(/[^dgimsuvy]/.test(flags)||new Set(flags).size!==flags.length)throw new Error('Bayraklar geçersiz veya tekrarlı.');const safeFlags=flags.includes('g')?flags:flags+'g';const re=new RegExp(pattern,safeFlags);let m,count=0;while((m=re.exec(text))&&count<500){const row=document.createElement('div');row.className='match';row.innerHTML=`<code>${esc(m[0])}</code><span>Konum ${m.index}–${m.index+m[0].length}</span>`;out.append(row);count++;if(m[0]==='')re.lastIndex++;}$('#regexCount').textContent=`${count} eşleşme`;$('#regexResult').textContent=count?`İlk ${count} eşleşme listelendi.`:'Eşleşme bulunamadı.';$('#regexResult').dataset.matches=[...out.querySelectorAll('.match code')].map(x=>x.textContent).join('\n');statusMsg('Regex testi tamamlandı.');}catch(err){$('#regexResult').textContent='Regex hatası: '+err.message;$('#regexCount').textContent='Hata';statusMsg('Desen veya bayrakları kontrol et.');}},copyMatches:()=>copyText($('#regexResult').dataset.matches||''),
     startTypingTest:()=>beginTypingTest(),
+    loadLeaderboard:()=>loadLeaderboard(),
+    submitTypingScore:()=>submitTypingScore(),
     newTypingPrompt:()=>{resetTypingTest(true);statusMsg('Yeni rastgele metin hazır. Testi başlatabilirsin.');},
     addPlannerTask:()=>{const inputEl=$('#plannerTaskText');const text=inputEl?.value.trim();if(!text){statusMsg('Önce bir görev yaz.');inputEl?.focus();return;}const tasks=loadPlannerTasks();if(tasks.length>=300){statusMsg('En fazla 300 görev saklanabilir.');return;}const id=(globalThis.crypto?.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random().toString(36).slice(2,9)}`);tasks.push({id,text,due:$('#plannerTaskDue').value,priority:$('#plannerTaskPriority').value,done:false,createdAt:Date.now()});const saved=savePlannerTasks(tasks);inputEl.value='';renderPlannerTasks();statusMsg(saved?'Görev listeye eklendi.':'Görev bu oturum boyunca saklandı; tarayıcı depolaması kullanılamıyor.');},
     togglePlannerTask:(button)=>{const id=button?.dataset.taskId;const tasks=loadPlannerTasks();const task=tasks.find(t=>t.id===id);if(!task)return;task.done=!task.done;const saved=savePlannerTasks(tasks);renderPlannerTasks();statusMsg(task.done?'Görev tamamlandı.':`Görev yeniden açıldı.${saved?'':' Liste kalıcı kaydedilemedi.'}`);},
