@@ -19,10 +19,21 @@
       .split(/\s+/u)
       .filter(Boolean);
   }
+  function buildTypingPrompt(bank, wordCount){
+    const words=[];
+    while(words.length<wordCount){
+      const pool=bank.slice();
+      for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+      if(words.length&&pool[0]===words[words.length-1]){
+        const differentIndex=pool.findIndex(word=>word!==words[words.length-1]);
+        if(differentIndex>0)[pool[0],pool[differentIndex]]=[pool[differentIndex],pool[0]];
+      }
+      words.push(...pool.slice(0,wordCount-words.length));
+    }
+    return words.join(' ');
+  }
   function chooseTypingPrompt(){
-    const pool=typingWordBank.slice();
-    for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
-    typingCurrentPrompt=pool.slice(0,58).join(' ');
+    typingCurrentPrompt=buildTypingPrompt(typingWordBank,typingPromptWordCount);
     typingPromptUsed=false;
     const root=$('#typingPrompt');if(root)root.textContent=typingCurrentPrompt;
   }
@@ -241,7 +252,6 @@
   if(menuToggle && nav) menuToggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuToggle.setAttribute('aria-expanded',String(open));});
   if(nav) nav.addEventListener('click',e=>{if(e.target.closest('a')){nav.classList.remove('open');menuToggle?.setAttribute('aria-expanded','false');}});
   $('#year').textContent=new Date().getFullYear();
-
   function csvParse(text) {
     const rows=[]; let row=[], field='', quoted=false;
     for(let i=0;i<text.length;i++) { const c=text[i];
@@ -330,6 +340,13 @@
     clearPlannerCompleted:()=>{const tasks=loadPlannerTasks().filter(t=>!t.done);savePlannerTasks(tasks);renderPlannerTasks();statusMsg('Tamamlanan görevler temizlendi.');},
     makeBrief:()=>{const type=$('#briefType').value,title=$('#briefTitle').value.trim()||'Başlıksız çalışma',notes=$('#briefNotes').value.trim()||'(Henüz ayrıntı girilmedi.)';const templates={task:`# ${title}\n\n## Amaç\n${notes}\n\n## Kapsam\n- [ ] Yapılacak işi netleştir\n- [ ] Kabul kriterlerini belirle\n- [ ] Test ve doğrulama adımlarını yaz\n\n## Tamamlanma kriterleri\n- [ ] Beklenen sonuç elde edildi\n- [ ] Hata durumları kontrol edildi`,bug:`# Hata raporu: ${title}\n\n## Özet\n${notes}\n\n## Tekrarlama adımları\n1. \n2. \n3. \n\n## Beklenen sonuç\n\n## Gerçekleşen sonuç\n\n## Ortam / sürüm\n\n## Ekler`,meeting:`# Toplantı özeti: ${title}\n\n## Notlar\n${notes}\n\n## Alınan kararlar\n- \n\n## Aksiyonlar\n- [ ] Görev — Sorumlu — Tarih\n\n## Açık konular\n- `,readme:`# ${title}\n\n${notes}\n\n## Özellikler\n- \n\n## Kurulum\n1. Depoyu klonla\n2. Gereksinimleri yükle\n3. Uygulamayı çalıştır\n\n## Kullanım\n\n## Yapılandırma\n\n## Lisans`,release:`# Sürüm notları — ${title}\n\n## Yeni özellikler\n- ${notes}\n\n## İyileştirmeler\n- \n\n## Hata düzeltmeleri\n- \n\n## Bilinen sorunlar\n- `,content:`# İçerik planı: ${title}\n\n## Hedef ve konu\n${notes}\n\n## Taslaklar\n1. Eğitici içerik: \n2. Hızlı ipucu: \n3. Proje / süreç paylaşımı: \n\n## Yayın takvimi\n- Tarih — Kanal — Konu\n\n## Ölçülecek sonuç\n- `};const out=templates[type];$('#briefResult').textContent=out;$('#briefResult').dataset.output=out;statusMsg('Taslak oluşturuldu; bilgileri yayınlamadan önce gözden geçir.');},copyBrief:()=>copyText($('#briefResult').dataset.output||$('#briefResult').textContent),downloadBrief:()=>download('velandris-taslak.md',$('#briefResult').dataset.output||$('#briefResult').textContent,'text/markdown;charset=utf-8')
   };
+  const requestedApp=new URLSearchParams(window.location.search).get('app');
+  if(requestedApp==='typingtest'){
+    const cleanUrl=new URL(window.location.href);
+    cleanUrl.searchParams.delete('app');
+    window.history.replaceState(window.history.state,'',cleanUrl.pathname+cleanUrl.search+cleanUrl.hash);
+    openModal('typingtest');
+  }
   function fmtBytes(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(2)+' MB';}
   function rgb(hex){return hex.replace('#','').match(/.{2}/g).map(s=>parseInt(s,16));}
   function luminance(hex){return rgb(hex).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);}

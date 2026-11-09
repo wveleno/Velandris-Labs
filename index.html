@@ -18,11 +18,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07101b">
-  <meta name="description" content="Velandris Labs; görsel, metin, veri ve günlük işler için pratik web araçları.">
+  <meta name="description" content="Velandris Labs'te ücretsiz programları keşfet, teknoloji ve yazılım rehberlerini oku, tarayıcı araçlarını kullan.">
   <meta property="og:title" content="Velandris Labs — Pratik dijital araçlar">
-  <meta property="og:description" content="Dosya düzenleme, görsel hazırlama, veri dönüştürme ve günlük işler için pratik araçlar.">
+  <meta property="og:description" content="Ücretsiz programlar, teknoloji ve yazılım rehberleri, tarayıcıda çalışan dijital araçlar.">
   <meta property="og:type" content="website">
-  <title>Velandris Labs — Pratik dijital araçlar</title>
+  <title>Velandris Labs — Programlar, rehberler ve dijital araçlar</title>
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <style id="collaboration-inline-layout-fix">
@@ -78,6 +78,7 @@
   </style>
   <script src="config.js" defer></script>
   <script src="app.js" defer></script>
+  <script src="reflex.js" defer></script>
 
   <style id="collaboration-form-final-fix">
     #collaboration.collaboration-section { padding: 34px 0 78px !important; scroll-margin-top: 100px !important; }
@@ -134,16 +135,16 @@
       <span class="brand-wordmark"><strong>VELANDRIS<span>LABS</span></strong><small>PRATİK DİJİTAL ARAÇLAR</small></span>
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
-    <nav id="nav" aria-label="Ana menü"><a href="#studio">Uygulamalar</a><a href="#typingFeature">Klavye Arenası</a><a href="#projects">Projeler</a><a href="programlar.html">Ücretsiz Programlar</a><a href="#about">Hakkında</a></nav>
+    <nav id="nav" aria-label="Ana menü"><a href="#home">Ana Sayfa</a><a href="programlar.html">Ücretsiz Programlar</a><a href="#guides">Rehberler</a><a href="#studio">Araçlar</a><a href="#about">Hakkında</a></nav>
     <a class="nav-cta" href="#contact">İletişim <span>↗</span></a>
   </header>
   <main id="home">
     <section class="hero hero-v3 wrap">
       <div class="hero-copy hero-copy-v3">
-        <div class="eyebrow"><span class="pulse"></span> VELANDRIS LABS <span class="eyebrow-divider">/</span> PRATİK ARAÇLAR</div>
+        <div class="eyebrow"><span class="pulse"></span> ÜCRETSİZ PROGRAMLAR <span class="eyebrow-divider">/</span> REHBERLER <span class="eyebrow-divider">/</span> DİJİTAL ARAÇLAR</div>
         <h1>Dijital işlerini<br><span>daha akıllı</span> tamamla.</h1>
-        <p>Fotoğraf düzenle, metnini toparla, verini dönüştür veya küçük bir hesabı hemen yap. İhtiyacın olan aracı aç ve işini bitir.</p>
-        <div class="hero-actions"><a class="button primary" href="#studio">Uygulamaları keşfet <span>↓</span></a></div>
+        <p>Ücretsiz programları keşfet, teknoloji ve yazılım rehberlerinden yararlan, tarayıcı araçlarıyla işini kolaylaştır.</p>
+        <div class="hero-actions"><a class="button primary" href="programlar.html">Ücretsiz Programlar <span>↗</span></a><a class="button secondary" href="#reflex">Reflex Challenge <span>↓</span></a></div>
         <div class="hero-proof"><span class="proof-icon">✦</span><span><strong>Kurulum yok, karmaşa yok.</strong><small>Birçok işlem doğrudan tarayıcında yapılır.</small></span></div>
       </div>
       <div class="command-center" aria-label="Velandris uygulama paneli ön izlemesi">
@@ -158,6 +159,26 @@
       </div>
     </section>
     <div class="ticker ticker-v3" aria-label="Kullanım alanları"><span>GÖRSEL HAZIRLAMA</span><i></i><span>KLAVYE HIZ TESTİ</span><i></i><span>ŞİFRE GÜVENLİĞİ</span><i></i><span>TOPLU İŞLEM</span><i></i><span>TARAYICINDA ÇALIŞIR</span></div>
+
+    <section class="reflex-home wrap" id="reflex" aria-labelledby="reflexTitle" data-reflex-game>
+      <div class="reflex-home-copy">
+        <h2 id="reflexTitle">Reflex Test</h2>
+        <p>Tepki süreni ölç. Bakalım ne kadar hızlısın?</p>
+      </div>
+      <div class="reflex-home-panel">
+        <p class="reflex-home-status" id="reflexStatus" role="status" aria-live="polite">Hazırsan başlat. Yeşil sinyali görmeden tıklama.</p>
+        <span class="reflex-home-signal" aria-hidden="true"></span>
+        <button class="reflex-home-pad" id="reflexPad" type="button" data-state="idle" aria-describedby="reflexStatus" aria-label="Tepki testini başlat">
+          <span id="reflexPadLabel">Başlat</span>
+        </button>
+        <div class="reflex-home-result" id="reflexResult" aria-live="polite" hidden>
+          <span class="reflex-home-result-label" id="reflexResultLabel">TEPKİ SÜREN</span>
+          <strong id="reflexTime">—</strong>
+          <p id="reflexResultMessage"></p>
+          <button class="button secondary" id="reflexRetry" type="button">Tekrar dene <span aria-hidden="true">↻</span></button>
+        </div>
+      </div>
+    </section>
 
     <section class="typing-feature wrap" id="typingFeature" data-tags="klavye hız testi yazma puan doğruluk skor kelime yarış" aria-labelledby="typingFeatureTitle">
       <div class="typing-feature-copy">
@@ -222,6 +243,18 @@
           <div class="software-mini-row"><span class="software-mini-icon violet">▤</span><span><b>Üretkenlik</b><small>Günlük iş akışları</small></span><i>02</i></div>
           <div class="software-mini-row"><span class="software-mini-icon green">⇩</span><span><b>Güvenli indirme</b><small>Sürüm ve kullanım bilgisi</small></span><i>03</i></div>
         </div>
+      </div>
+    </section>
+
+    <section class="section wrap guides-preview" id="guides" aria-labelledby="guidesTitle">
+      <div class="guides-preview-card">
+        <div class="guides-preview-mark" aria-hidden="true">i</div>
+        <div>
+          <div class="eyebrow">VELANDRIS / REHBERLER</div>
+          <h2 id="guidesTitle">Teknoloji ve yazılım hakkında <span>faydalı içerikler.</span></h2>
+          <p>Bilgisayar, teknoloji ve yazılım konularında anlaşılır rehberler bu bölümde yayımlanacak. Henüz yayınlanmış bir rehber yok.</p>
+        </div>
+        <a class="button secondary" href="#collaboration">Konu öner <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 

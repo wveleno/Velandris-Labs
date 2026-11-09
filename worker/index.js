@@ -6,6 +6,7 @@ const DURATION_MS = 60_000;
 const MAINTENANCE_MODE = false; // Existing leaderboard endpoints are active again.
 const MIN_SUBMIT_MS = 58_000;
 const MAX_SUBMIT_MS = 180_000;
+const PROMPT_WORD_COUNT = 500;
 const WORD_BANK = `bugün yarın zaman dünya insan hayat düşünce fikir çözüm çalışma emek başarı öğrenmek geliştirmek tasarım yazılım teknoloji üretim paylaşmak keşfetmek denemek düzenlemek oluşturmak başlamak bitirmek hızlı doğru dikkat sakin güçlü kolay küçük büyük farklı yeni güzel gerçek önemli değer fayda sonuç hedef plan yöntem adım süreç alışkanlık ihtiyaç amaç araç uygulama ekran klavye pencere dosya klasör bilgi veri metin içerik görsel renk bağlantı sayfa web tarayıcı cihaz bilgisayar telefon öğrenci öğretmen ekip kullanıcı proje sistem hizmet deneyim kalite güvenlik gizlilik performans hız doğruluk denge odak enerji düzen akış liste tablo satır sütun kayıt alan ayar seçenek kontrol test örnek belge rapor kaynak sonuç ilerleme değişim gelişim fırsat merak üretici geliştirici yazar okur oyuncu taslak notlar görev iş planlama yöntem odaklanmak düşünmek anlamak anlatmak yazmak okumak çizmek görmek duymak seçmek bulmak çözmek ölçmek hesaplamak karşılaştırmak azaltmak artırmak sadeleştirmek iyileştirmek hızlandırmak korumak kullanmak denetlemek tamamlamak işe yarar verimli tutarlı anlaşılır güvenilir erişilebilir yaratıcı pratik esnek modern sade temiz parlak kararlı dikkatli hafif akıllı çevik düzenli faydalı etkili bağlantılı yerel hızlıca güvenle adımlar ayrıntı örnekler içerikler dosyalar görseller sayılar harfler karakterler kelimeler cümleler araçlar fikirler insanlar işler merak beceri deneyim gelişme hedefler`.trim().split(/\s+/u);
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
 function headersFor(origin) {
@@ -23,12 +24,20 @@ function json(data, status, headers) {
   return new Response(JSON.stringify(data), { status: status || 200, headers });
 }
 function shuffledPrompt() {
-  const pool = WORD_BANK.slice();
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
+  const words = [];
+  while (words.length < PROMPT_WORD_COUNT) {
+    const pool = WORD_BANK.slice();
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    if (words.length && pool[0] === words[words.length - 1]) {
+      const differentIndex = pool.findIndex((word) => word !== words[words.length - 1]);
+      if (differentIndex > 0) [pool[0], pool[differentIndex]] = [pool[differentIndex], pool[0]];
+    }
+    words.push(...pool.slice(0, PROMPT_WORD_COUNT - words.length));
   }
-  return pool.slice(0, 58).join(" ");
+  return words.join(" ");
 }
 // Common Turkish and English profanity/insult terms. Add or remove terms here as needed.
 const BLOCKED_NICKNAME_TERMS = [
