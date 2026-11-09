@@ -13,7 +13,8 @@
   const typingWordBank = (`bugün yarın zaman dünya insan hayat düşünce fikir çözüm çalışma emek başarı öğrenmek geliştirmek tasarım yazılım teknoloji üretim paylaşmak keşfetmek denemek düzenlemek oluşturmak başlamak bitirmek hızlı doğru dikkat sakin güçlü kolay küçük büyük farklı yeni güzel gerçek önemli değer fayda sonuç hedef plan yöntem adım süreç alışkanlık ihtiyaç amaç araç uygulama ekran klavye pencere dosya klasör bilgi veri metin içerik görsel renk bağlantı sayfa web tarayıcı cihaz bilgisayar telefon öğrenci öğretmen ekip kullanıcı proje sistem hizmet deneyim kalite güvenlik gizlilik performans hız doğruluk denge odak enerji düzen akış liste tablo satır sütun kayıt alan ayar seçenek kontrol test örnek belge rapor kaynak sonuç başarı ilerleme değişim gelişim fırsat merak üretici geliştirici yazar okur oyuncu taslak fikirler notlar görev iş süreç planlama paylaşım erişim yöntem sonuç odaklanmak düşünmek anlamak anlatmak yazmak okumak çizmek görmek duymak seçmek bulmak çözmek ölçmek hesaplamak karşılaştırmak azaltmak artırmak sadeleştirmek iyileştirmek hızlandırmak korumak kullanmak denetlemek tamamlamak öğrenilen işe yarar verimli tutarlı anlaşılır güvenilir erişilebilir yaratıcı pratik esnek modern sade temiz parlak kararlı dikkatli hafif akıllı çevik düzenli faydalı etkili bağlantılı yerel hızlıca güvenle adımları ayrıntı örnekler içerikler dosyalar görseller sayılar harfler karakterler kelimeler cümleler araçlar fikirler insanlar işler üretim merak beceri deneyim gelişme başarı hedefler`.trim()).split(/\s+/);
   function normalizeTypingWords(text){
     return String(text ?? '')
-      .replace(/[\p{P}\p{S}]/gu, ' ')
+      .normalize('NFKC')
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
       .toLocaleLowerCase('tr-TR')
       .trim()
       .split(/\s+/u)
